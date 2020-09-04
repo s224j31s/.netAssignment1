@@ -1,0 +1,7 @@
+First Name|1er
+Last Name|1324
+Address|3124
+Phone|1324
+email|1432
+Account Number|46186267
+Balance|0

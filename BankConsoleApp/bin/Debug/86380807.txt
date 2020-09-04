@@ -1,0 +1,7 @@
+First Name|a
+Last Name|d
+Address|d
+Phone|1324567890
+email|email@dog.com
+Account Number|86380807
+Balance|0

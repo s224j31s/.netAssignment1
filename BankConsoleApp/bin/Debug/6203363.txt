@@ -1,0 +1,6 @@
+First Name|d
+Last Name|d
+Address|d
+Phone|d
+email|d
+Account Number|6203363

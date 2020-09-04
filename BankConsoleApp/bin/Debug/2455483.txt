@@ -1,0 +1,7 @@
+First Name|asdf
+Last Name|asdfjdsaf
+Address|adfs
+Phone|asf
+email|asdf
+Account Number|2455483
+Balance|0

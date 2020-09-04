@@ -1,0 +1,7 @@
+First Name|asdf
+Last Name|adsf
+Address|adsf
+Phone|dsaf
+email|adfs
+Account Number|12453306
+Balance|0
