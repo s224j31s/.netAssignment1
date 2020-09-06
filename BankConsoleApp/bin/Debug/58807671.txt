@@ -1,0 +1,7 @@
+First Name|134
+Last Name|1234
+Address|132
+Phone|4134
+email|14
+Account Number|58807671
+Balance|0

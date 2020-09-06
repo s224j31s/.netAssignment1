@@ -1,0 +1,7 @@
+First Name|
+Last Name|adf
+Address|daf
+Phone|ads
+email|f
+Account Number|18455323
+Balance|0

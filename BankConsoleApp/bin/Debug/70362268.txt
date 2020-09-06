@@ -1,0 +1,7 @@
+First Name|ad
+Last Name|
+Address|adf
+Phone|
+email|adf
+Account Number|70362268
+Balance|0

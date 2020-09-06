@@ -1,0 +1,7 @@
+First Name|77777777777
+Last Name|daf
+Address|f
+Phone|fd
+email|f
+Account Number|14771527
+Balance|0
