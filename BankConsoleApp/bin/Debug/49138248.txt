@@ -1,0 +1,7 @@
+First Name|
+Last Name|
+Address|
+Phone|
+email|1
+Account Number|49138248
+Balance|0

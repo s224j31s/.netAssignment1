@@ -1,0 +1,7 @@
+First Name|a
+Last Name|a
+Address|a
+Phone|a
+email|a
+Account Number|98314922
+Balance|0

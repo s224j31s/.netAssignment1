@@ -1,0 +1,7 @@
+First Name|guest
+Last Name|123
+Address|123
+Phone|1234567890
+email|test@email.com
+Account Number|57622459
+Balance|0

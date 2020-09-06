@@ -1,0 +1,7 @@
+First Name|guest
+Last Name|2134
+Address|1324
+Phone|1234567890
+email|dog@email.com
+Account Number|28391004
+Balance|0

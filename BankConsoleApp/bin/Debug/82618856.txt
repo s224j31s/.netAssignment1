@@ -1,0 +1,7 @@
+First Name|1
+Last Name|1
+Address|1
+Phone|1234545678
+email|dig@email.com
+Account Number|82618856
+Balance|0

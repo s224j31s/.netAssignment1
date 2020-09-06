@@ -1,0 +1,7 @@
+First Name|asdf
+Last Name|asfd
+Address|asf
+Phone|fa
+email|af
+Account Number|18708365
+Balance|0
