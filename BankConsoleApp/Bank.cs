@@ -62,23 +62,20 @@ namespace BankConsoleApp
 
             Console.SetCursorPosition(0, 9);
 
-
-            string combine = inputUsername + "|";
-            combine += passwordInput;
-
             if (File.Exists("login.txt"))//login.txt file check
             {
                 string[] reader = System.IO.File.ReadAllLines("login.txt");
-
                 try
                 {
                     foreach (string s in reader)
                     {
-                        if (combine == s)
+                        char[] delimiter = { '|' };
+                        string[] loginCheck = s.Split(delimiter);
+
+                        if (inputUsername == loginCheck[0] && passwordInput == loginCheck[1])
                         {
                             return true;
                         }
-
                     }
                     if (loginDetails == false)
                     {
@@ -114,7 +111,6 @@ namespace BankConsoleApp
         }
         private void loginMenuView()
         {
-
             Console.WriteLine("╔═══════════════════════════════════════════════╗");
             Console.WriteLine("║\tWelcome to Simple Banking System\t║");
             Console.WriteLine("║═══════════════════════════════════════════════║");
@@ -123,7 +119,6 @@ namespace BankConsoleApp
             Console.WriteLine("║ User Name:                                    ║");
             Console.WriteLine("║ Password:                                     ║");
             Console.WriteLine("╚═══════════════════════════════════════════════╝");
-
         }
         private void mainMenuView()
         {
