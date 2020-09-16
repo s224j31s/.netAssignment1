@@ -15,9 +15,10 @@ namespace BankConsoleApp
     public class Bank
     {
         private bool loggedIn = false;
+        private List<Accounts> accounts;
         public Bank()
         {
-
+            accounts = new List<Accounts>();
         }
 
         public static void Main(string[] args)
@@ -64,11 +65,11 @@ namespace BankConsoleApp
 
             string combine = inputUsername + "|";
             combine += passwordInput;
-            Console.WriteLine(combine);
 
             if (File.Exists("login.txt"))//login.txt file check
             {
                 string[] reader = System.IO.File.ReadAllLines("login.txt");
+
                 try
                 {
                     foreach (string s in reader)
@@ -82,7 +83,7 @@ namespace BankConsoleApp
                     if (loginDetails == false)
                     {
                         Console.Write("Invalid login details.");
-                        Console.Write("Please try again (Y/N)");
+                        Console.Write(" Please try again (Y/N)");
                         char retry = '0';
 
                         while ((retry = readInput().KeyChar) != 'y')
@@ -145,48 +146,51 @@ namespace BankConsoleApp
         {
             char select = '0';
             bool invalidKey = false;
+            bool menuBreak = true;
             Console.Clear();
             mainMenuView();
             //Switch case for user selection
 
-            while ((select = readInput().KeyChar) != '8')
+            while (menuBreak == true)
             {
                 if (invalidKey)
                 {
                     Console.SetCursorPosition(0, 15);
                     Console.WriteLine("Invalid key. Please enter a number between 1 and 7");
                 }
-          
+                menuBreak = true;
                 invalidKey = false;
-
+                select = readInput().KeyChar;
                 switch (select)
                 {
                     case '1':
                         createAccount();
+                        menuBreak = false;
                         break;
 
                     case '2':
                         searchAccount();
-
+                        menuBreak = false;
                         break;
                     case '3':
-                        //deposit();
+                        depositAcc();
                         break;
                     case '4':
-                        //withdraw();
+                        withdraw();
                         break;
                     case '5':
-                        //statement();
+                        statement();
                         break;
                     case '6':
-                        //deleteAccount();
+                        deleteAccount();
                         break;
                     case '7':
-                        this.loggedIn = false;
+                        menuBreak = false;
                         Environment.Exit(0);
                         break;
                     default:
                         invalidKey = true;
+                        menuBreak = true;
                         break;
                 }
 
@@ -216,6 +220,7 @@ namespace BankConsoleApp
             Console.Clear();
             createAccountView();
             int accNumber;
+            double balance;
 
             Console.SetCursorPosition(16, 3); //set FirstName cursor location
             string firstName = Console.ReadLine();
@@ -238,128 +243,102 @@ namespace BankConsoleApp
             Match match = rgx.Match(email);
             //Email validation with regex
             bool emailMatch = false;
-            if (match.Success)
-                emailMatch = true;
-            else
-                Console.WriteLine(email + " is incorrect");
-            emailMatch = false;
+            //    if (match.Success)
+            //          emailMatch = true;
+            //        else
+            //              Console.WriteLine(email + " is incorrect");
+            //            emailMatch = false;
 
             Console.WriteLine();
-            Console.Clear();
-            Console.WriteLine();
 
-            Console.WriteLine("╔═══════════════════════════════════════════════╗");
-            Console.WriteLine("║\tCreate a new account\t\t\t║");
-            Console.WriteLine("║═══════════════════════════════════════════════║");
-            Console.WriteLine("║ 1. First Name:" + firstName + "\t\t\t\t║");
-            Console.WriteLine("║ 2. Last Name: " + lastName + "\t\t\t\t║");
-            Console.WriteLine("║ 3. Address:" + address + " \t\t\t\t\t║");
-            Console.WriteLine("║ 4. Phone:" + phone + "\t\t\t\t║");
-            Console.WriteLine("║ 5. Email:" + email + " \t\t\t║");
-            Console.WriteLine("╚═══════════════════════════════════════════════╝");
+            Console.WriteLine();
 
             Console.WriteLine("Is this information correct? Y/N");
 
 
             char select = '0';
-            char select1 = '0';
-            char select2 = '0';
+
+            bool detailsValid = true;
             do
             {
+                detailsValid = true;
+                select = readInput().KeyChar;
                 switch (select)
                 {
                     case 'y':
                         if (phone.Length == 10 && Int32.TryParse(phone, out int phoneNumber))
                         {
                             accNumber = new Random().Next(100000, 99999999);//Generates account number randomly
+                            balance = 0;
                             Console.WriteLine("Account created! Details will be emailed to you.");
                             Console.WriteLine("Account number is: " + accNumber);
 
-                            Accounts accounts = new Accounts(accNumber, firstName, lastName, address, phone, 0, email);
+                            Accounts accounts = new Accounts( firstName, lastName, address, phone,  email, accNumber, balance);
                             string path1 = accNumber.ToString();
                             string FileName = Path.Combine(path1) + ".txt";//text file joining with account number
                             using (StreamWriter accDetails = File.CreateText(FileName))//creating accountnumber.txt
                             {
+ 
                                 accDetails.WriteLine("First Name|" + firstName);
                                 accDetails.WriteLine("Last Name|" + lastName);
-                                accDetails.WriteLine("Address|" + address);
-                                accDetails.WriteLine("Phone|" + phone);
+                                accDetails.WriteLine("address|" + address);
+                                accDetails.WriteLine("Phone Number|" + phone);
                                 accDetails.WriteLine("email|" + email);
                                 accDetails.WriteLine("Account Number|" + accNumber);
-                                accDetails.WriteLine("Balance|" + '0');
-                            }
+                                accDetails.WriteLine("Balance|" + balance);
 
-                            using (StreamReader sr = File.OpenText(FileName))
-                            {
-                                string s = "";
-                                while ((s = sr.ReadLine()) != null)
-                                {
-                                    Console.WriteLine(s);
-                                }
+
                             }
                             Console.WriteLine("Do you wish to make another account? Y/N");
-
-                            do
-                            {
-                                switch (select1)
-                                {
-                                    case 'y':
-                                        createAccount();
-                                        break;
-                                    case 'n':
-                                        mainMenu();
-                                        break;
-                                    default:
-                                        break;
-                                }
-                            } while ((select1 = readInput().KeyChar) != 'x');
-
-
+                            createAccYesNo();
                         }
                         else
                         {
                             Console.WriteLine("Invalid details entered. Would you like to try again (Y/N)?");
-
-                            do
-                            {
-                                switch (select2)
-                                {
-                                    case 'y':
-                                        createAccount();
-                                        break;
-                                    case 'n':
-                                        mainMenu();
-                                        break;
-                                    default:
-                                        break;
-                                }
-                            } while ((select2 = readInput().KeyChar) != 'x');
+                            createAccYesNo();
 
                         }
+                        detailsValid = false;
                         break;
                     case 'n':
                         createAccount();
+                        detailsValid = false;
                         break;
                     default:
+                        detailsValid = true;
                         break;
                 }
-            } while ((select = readInput().KeyChar) != 'x');
+            } while (detailsValid == true);
         }
 
-        private void yesNoMenus()
+        private void createAccYesNo()
         {
-            char select = '0';
-            switch (select)
+            char yesNoSelect = '0';
+            yesNoSelect = readInput().KeyChar;
+            bool yesNo = true;
+            while (yesNo == true)
             {
-                case 'y':
-                    createAccount();
-                    break;
-                case 'n':
-                    mainMenu();
-                    break;
-                default:
-                    break;
+                yesNo = true;
+                switch (yesNoSelect)
+                {
+                    case 'y':
+                        createAccount();
+                        yesNo = false;
+
+                        break;
+                    case 'n':
+                        mainMenu();
+                        yesNo = false;
+
+                        break;
+                    default:
+                        yesNoSelect = readInput().KeyChar;
+                        yesNo = true;
+                        break;
+                }
+
             }
+
         }
         private void searchAccountView()
         {
@@ -372,107 +351,423 @@ namespace BankConsoleApp
 
         private void searchAccount()
         {
-            bool searching = false;
+            bool searching = true;
             char retry = '0';
             char retry1 = '0';
-            char retry2 = '0';
+
             do
             {
+                searching = true;
                 Console.Clear();
                 searchAccountView();
                 Console.SetCursorPosition(23, 3);
                 string accNumber = Console.ReadLine();
-                string FileName = Path.Combine(accNumber) + ".txt";//text file joining with account number
                 Console.SetCursorPosition(0, 8);
-                if (File.Exists(FileName))
+
+                if (findAccount(accNumber))
                 {
                     try
                     {
-                        using (StreamReader sr = File.OpenText(FileName))
-                        {
-                            string line;
-                            // Read and display lines from the file until the end of the file is reached
-                            Console.WriteLine("╔═══════════════════════════════════════════════╗");
-                            while ((line = sr.ReadLine()) != null)
-                            {
-                                int length = line.Length;
-                                if (length > 20 && length < 26)
-                                {
-                                    Console.WriteLine("║" + line + "\t\t\t\t║");
-                                }
-                                else if (length >= 30)
-                                {
-                                    Console.WriteLine("║" + line + "\t\t║");
-                                }
-                                else if (length > 25 && length < 31)
-                                {
-                                    Console.WriteLine("║" + line + "\t\t\t║");
-                                }
-                                else if (length >= 15 && length < 21)
-                                    Console.WriteLine("║" + line + "\t\t\t\t║");
-                                else if (length > 10 && length <= 15)
-                                    Console.WriteLine("║" + line + "\t\t\t\t\t║");
-                                else if (length >= 5 && length <= 10)
-                                    Console.WriteLine("║" + line + "\t\t\t\t\t\t║");
-
-                            }
-                            Console.WriteLine("╚═══════════════════════════════════════════════╝");
-                        }
+                        Account(Convert.ToInt32(accNumber)).viewAccDetails();
                         Console.WriteLine("Would you like to search for another account Y/N?");
-                        do
-                        {
-                            switch (retry1)
-                            {
-                                case 'y':
-                                    {
-                                        Console.Clear();
-                                        searchAccount();
-                                        break;
-                                    }
-                                case 'n':
-                                    {
-                                        mainMenu();
-                                        break;
-                                    }
-                                default:
-                                    break;
-                            }
+                        searchAccYesNo();
 
-                        } while ((retry1 = readInput().KeyChar) != 'x');
                     }
                     catch
                     {
+                        Console.WriteLine("Error. Please enter a valid number. Try again Y/N");
+                        searchAccYesNo();
                     }
                 }
                 else
                 {
                     Console.WriteLine("Error. Account Number not found");
                     Console.WriteLine("Would you like to try search again? Y/N");
- 
-                    do
-                    {
-                        switch (retry2)
-                        {
-                            case 'y':
-                                {
-                                    Console.Clear();
-                                    searchAccount();
-                                    break;
-                                }
-                            case 'n':
-                                {
-                                    mainMenu();
-                                    break;
-                                }
-                            default:
-                                break;
-                        }
-                    } while ((retry2 = readInput().KeyChar) != 'x');
+                    searchAccYesNo();
 
                 }
-            } while ((retry = readInput().KeyChar) != 'x');
+            } while (searching == true);
 
         }
+
+        private bool findAccount(string accNumber)
+        {
+            string FileName = Path.Combine(accNumber) + ".txt";
+            if (accNumber.Length >= 6 && accNumber.Length <= 10 && Int32.TryParse(accNumber, out int accountNumber) && File.Exists(FileName))
+            {
+
+                string[] accountFile = File.ReadAllLines(FileName);
+                string[] accountInfo = accountFile.Take(7).ToArray();
+                List<string> accInfoList = new List<string>();
+                foreach (string line in accountInfo)
+                {
+                    char[] delimiter = { '|' };
+                    string[] splitInfo = line.Split(delimiter);
+                    string parsedInfo = splitInfo[1].ToString();
+                    accInfoList.Add(parsedInfo);
+                }
+
+                try
+                {
+                    Accounts validAccount = new Accounts(
+                    accInfoList[0], accInfoList[1], accInfoList[2], accInfoList[3], accInfoList[4], Convert.ToInt32(accInfoList[5]), Convert.ToDouble(accInfoList[6]));
+                    accounts.Add(validAccount);
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
+        private void searchAccYesNo()
+        {
+            char select = '0';
+            bool searchYesNo = true;
+            select = readInput().KeyChar;
+            do
+            {
+                searchYesNo = true;
+                switch (select)
+                {
+                    case 'y':
+                        searchAccount();
+                        searchYesNo = false;
+
+                        break;
+                    case 'n':
+                        mainMenu();
+                        searchYesNo = false;
+
+                        break;
+                    default:
+                        select = readInput().KeyChar;
+                        searchYesNo = true;
+                        break;
+                }
+            } while (searchYesNo == true);
+        }
+        private void depositAcc()
+        {
+            Console.Clear();
+            depositView();
+            Console.SetCursorPosition(23, 5);
+            string accNumber = Console.ReadLine();
+            Console.SetCursorPosition(18, 6);
+            string amount = Console.ReadLine();
+            string FileName = Path.Combine(accNumber) + ".txt";//text file joining with account number
+
+            if (findAccount(accNumber))
+            {
+
+                if (Double.TryParse(amount, out double dblAmount))
+                {
+                    Account(Convert.ToInt32(accNumber)).Deposit(dblAmount);
+
+                    Console.WriteLine("Amount deposited. Would you like to make another deposit Y/N?");
+                    depositYesNo();
+                }
+                else
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("Error: Please enter a valid number");
+                    Console.WriteLine("Would you like to try again Y/N?");
+                    depositYesNo();
+                }
+
+
+
+            }
+            else
+            {
+                Console.WriteLine();
+                Console.WriteLine("Error. Account Number not found");
+                Console.WriteLine("Would you like to try search again? Y/N");
+                depositYesNo();
+            }
+
+        }
+
+        private void depositYesNo()
+        {
+            char select = '0';
+            bool deposit = true;
+            select = readInput().KeyChar;
+            do
+            {
+                switch (select)
+                {
+                    case 'y':
+                        deposit = false;
+                        depositAcc();
+                        break;
+                    case 'n':
+                        deposit = false;
+                        mainMenu();
+                        break;
+                    default:
+                        deposit = true;
+                        select = readInput().KeyChar;
+                        break;
+                }
+            } while (deposit == true);
+        }
+
+        private Accounts Account(int accountNumber)
+        {
+
+            foreach (Accounts account in accounts)
+            {
+
+                if (account.matchNumbers(accountNumber))
+                    return account;
+            }
+            return null;
+        }
+
+        private void depositView()
+        {
+            Console.WriteLine("╔═══════════════════════════════════════════════╗");
+            Console.WriteLine("║\t\tDeposit:\t\t\t║");
+            Console.WriteLine("║═══════════════════════════════════════════════║");
+            Console.WriteLine("║ \t\tEnter Details:\t\t\t║");
+            Console.WriteLine("║═══════════════════════════════════════════════║");
+            Console.WriteLine("║ \tAccount Number:\t\t\t\t║");
+            Console.WriteLine("║ \tAmount: $\t\t\t\t║");
+            Console.WriteLine("╚═══════════════════════════════════════════════╝");
+        }
+        private void withdraw()
+        {
+            Console.Clear();
+            withdrawView();
+            Console.SetCursorPosition(23, 5);
+            string accNumber = Console.ReadLine();
+            Console.SetCursorPosition(17, 6);
+            string amount = Console.ReadLine();
+
+            if (findAccount(accNumber))
+            {
+                if (Double.TryParse(amount, out double dblAmount))
+                {
+                    if (Account(Convert.ToInt32(accNumber)).checkBalance(dblAmount))
+                    {
+                        Account(Convert.ToInt32(accNumber)).Withdraw(dblAmount);
+                        Console.WriteLine("Amount withdrawn. Would you like to make another deposit Y/N?");
+                        withdrawYesNo();
+                    }
+                    else
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine("Account does not have enough funds to withdraw.");
+                        Console.WriteLine("Would you like to try again Y/N?");
+                        withdrawYesNo();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("Error: Please enter a valid number");
+                    Console.WriteLine("Would you like to try again Y/N?");
+                    withdrawYesNo();
+                }
+
+
+            }
+            else
+            {
+                Console.WriteLine("Error. Account Number not found");
+                Console.WriteLine("Would you like to try search again? Y/N");
+                withdrawYesNo();
+            }
+        }
+
+        private void withdrawView()
+        {
+            Console.WriteLine("╔═══════════════════════════════════════════════╗");
+            Console.WriteLine("║\t\tWithdraw:\t\t\t║");
+            Console.WriteLine("║═══════════════════════════════════════════════║");
+            Console.WriteLine("║ \t\tEnter Details:\t\t\t║");
+            Console.WriteLine("║═══════════════════════════════════════════════║");
+            Console.WriteLine("║ \tAccount Number:\t\t\t\t║");
+            Console.WriteLine("║ \tAmount: $\t\t\t\t║");
+            Console.WriteLine("╚═══════════════════════════════════════════════╝");
+        }
+
+
+        private void withdrawYesNo()
+        {
+            char select = '0';
+            bool withdrawing = true;
+            select = readInput().KeyChar;
+            do
+            {
+                switch (select)
+                {
+                    case 'y':
+                        withdrawing = false;
+                        withdraw();
+                        break;
+                    case 'n':
+                        withdrawing = false;
+                        mainMenu();
+                        break;
+                    default:
+                        withdrawing = true;
+                        select = readInput().KeyChar;
+                        break;
+                }
+            } while (withdrawing == true);
+        }
+
+        private void statement()
+        {
+
+            Console.Clear();
+            statementView();
+            Console.SetCursorPosition(23, 5);
+            string accNumber = Console.ReadLine();
+
+
+            Console.WriteLine();
+
+            if (findAccount(accNumber))
+            {
+                string FileName = Path.Combine(accNumber.ToString()) + ".txt";
+                string[] accountFile = File.ReadAllLines(FileName);
+                string[] accountInfo = accountFile.Take(7).ToArray();
+
+                foreach (string line in accountInfo)
+                {
+                    char[] delimiter = { '|' };
+                    string[] death = line.Split(delimiter);
+                    Console.WriteLine(death[1].ToString());
+
+                }
+            }
+            else
+                Console.WriteLine("Error");
+
+
+        }
+
+        private void statementView()
+        {
+            {
+                Console.WriteLine("╔═══════════════════════════════════════════════╗");
+                Console.WriteLine("║\t\tStatement:\t\t\t║");
+                Console.WriteLine("║═══════════════════════════════════════════════║");
+                Console.WriteLine("║ \t\tEnter Details:\t\t\t║");
+                Console.WriteLine("║═══════════════════════════════════════════════║");
+                Console.WriteLine("║ \tAccount Number:\t\t\t\t║");
+                Console.WriteLine("╚═══════════════════════════════════════════════╝");
+            }
+        }
+
+        private void deleteAccount()
+        {
+            Console.Clear();
+            deleteView();
+            Console.SetCursorPosition(23, 5);
+            string accNumber = Console.ReadLine();
+            bool deleteConfirm = true;
+            char deleteSelect = '0';
+            Console.WriteLine();
+
+
+            if (findAccount(accNumber))
+            {
+                string FileName = Path.Combine(accNumber) + ".txt";//text file joining with account number
+                Account(Convert.ToInt32(accNumber)).viewAccDetails();
+                Console.WriteLine("Are you sure you want to delete this file Y/N?");
+
+                while (deleteConfirm == true)
+                {
+                    deleteSelect = readInput().KeyChar;
+                    switch (deleteSelect)
+                    {
+                        case 'y':
+
+                          ///  string[] accountInfo = File.ReadAllLines(FileName).Take(7).ToArray();
+                          //  Accounts toDeleteAccount = new Accounts(
+         //  accountInfo[0], accountInfo[1], accountInfo[2], accountInfo[3], accountInfo[4], Convert.ToInt32(accountInfo[5]), Convert.ToDouble(accountInfo[5]));
+
+                           // accounts.Remove(toDeleteAccount);
+
+                            File.Delete(FileName);
+
+                            Console.WriteLine("Account deleted.");
+                            Console.WriteLine("Would you like to try again Y/N?");
+                            retryDelete();
+
+                            deleteConfirm = false;
+                            break;
+                        case 'n':
+                            mainMenu();
+                            deleteConfirm = false;
+                            break;
+                        default:
+                            deleteSelect = readInput().KeyChar;
+                            deleteConfirm = true;
+                            break;
+                    }
+                }
+
+            }
+            else
+            {
+                Console.WriteLine();
+                Console.WriteLine("Error. Account Number not found");
+                Console.WriteLine("Would you like to try search again? Y/N");
+                retryDelete();
+            }
+        }
+
+        private void retryDelete()
+        {
+            bool delete = true;
+            char retryDelete = '0';
+            retryDelete = readInput().KeyChar;
+            do
+            {
+                switch (retryDelete)
+                {
+                    case 'y':
+                        {
+                            Console.Clear();
+                            deleteAccount();
+                            break;
+                        }
+                    case 'n':
+                        {
+                            mainMenu();
+                            break;
+                        }
+                    default:
+                        retryDelete = readInput().KeyChar;
+                        break;
+                }
+
+            } while (delete == true);
+        }
+
+        private void deleteView()
+        {
+            Console.WriteLine("╔═══════════════════════════════════════════════╗");
+            Console.WriteLine("║\t\tDelete Account \t\t\t║");
+            Console.WriteLine("║═══════════════════════════════════════════════║");
+            Console.WriteLine("║ \t\tEnter Details \t\t\t║");
+            Console.WriteLine("║═══════════════════════════════════════════════║");
+            Console.WriteLine("║ \tAccount Number:\t\t\t\t║");
+            Console.WriteLine("╚═══════════════════════════════════════════════╝");
+        }
+
 
     }
 }
