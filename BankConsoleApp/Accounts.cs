@@ -93,8 +93,8 @@ namespace BankConsoleApp
         }
         public void AddOldStatements()
         {
-        
-            string[] accountFile = File.ReadAllLines($"{accNumber}.txt");
+            string FileName = Path.Combine(accNumber.ToString()) + ".txt";
+            string[] accountFile = File.ReadAllLines(FileName);
             string[] oldStatements = accountFile.Skip(7).ToArray();
             foreach (string transaction in oldStatements)
             {

@@ -4,4 +4,6 @@ address|123 dog st
 Phone Number|1234567890
 email|tst@email.com
 Account Number|68314897
-Balance|0
+Balance|500
+18/09/2020|Deposit|500|500
+
