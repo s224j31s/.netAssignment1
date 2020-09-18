@@ -1,0 +1,9 @@
+First Name|123
+Last Name|123
+address|13
+Phone Number|1324567888
+email|test@email.com
+Account Number|11387652
+Balance|1600
+18/09/2020|Type|500|1600
+
