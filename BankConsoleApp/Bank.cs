@@ -137,6 +137,7 @@ namespace BankConsoleApp
             Console.WriteLine("║ Enter your Choice (1-7):\t\t\t║");
             Console.WriteLine("╚═══════════════════════════════════════════════╝");
         }
+        //main menu method after logging in
         private void mainMenu()
         {
             char select = '0';
@@ -196,6 +197,7 @@ namespace BankConsoleApp
         {
             return Console.ReadKey(true);
         }
+        //Console view of the create account function
         private void createAccountView()
         {
             Console.WriteLine("╔═══════════════════════════════════════════════╗");
@@ -208,6 +210,7 @@ namespace BankConsoleApp
             Console.WriteLine("║ 5. Email:                                     ║");
             Console.WriteLine("╚═══════════════════════════════════════════════╝");
         }
+        //Method to create an account. Contains phone number and email validation checks. Will contain sent email check
         private void createAccount()
         {
 
@@ -385,6 +388,8 @@ namespace BankConsoleApp
 
         }
 
+        //method to check if the number from user input matches a text file, if it matches the account file contents are added to an account 
+        //object and the method returns true. If the text file cannot be found, return false.
         private bool findAccount(string accNumber)
         {
             string FileName = Path.Combine(accNumber) + ".txt";
@@ -407,13 +412,14 @@ namespace BankConsoleApp
                     Accounts validAccount = new Accounts(
                     accInfoList[0], accInfoList[1], accInfoList[2], accInfoList[3], accInfoList[4], Convert.ToInt32(accInfoList[5]), Convert.ToDouble(accInfoList[6]));
                     accounts.Add(validAccount);
-                    return true;
+                    //validAccount.AddOldStatements();
+                   
                 }
                 catch
                 {
                     return false;
                 }
-
+                return true;
             }
             else
             {
@@ -465,7 +471,7 @@ namespace BankConsoleApp
                 if (Double.TryParse(amount, out double dblAmount))
                 {
                     Account(Convert.ToInt32(accNumber)).Deposit(dblAmount);
-
+                    Console.WriteLine();
                     Console.WriteLine("Amount deposited. Would you like to make another deposit Y/N?");
                     depositYesNo();
                 }
@@ -554,7 +560,8 @@ namespace BankConsoleApp
                     if (Account(Convert.ToInt32(accNumber)).checkBalance(dblAmount))
                     {
                         Account(Convert.ToInt32(accNumber)).Withdraw(dblAmount);
-                        Console.WriteLine("Amount withdrawn. Would you like to make another deposit Y/N?");
+                        Console.WriteLine();
+                        Console.WriteLine("Amount withdrawn. Would you like to make another withdrawal Y/N?");
                         withdrawYesNo();
                     }
                     else
@@ -563,7 +570,7 @@ namespace BankConsoleApp
                         Console.WriteLine("Account does not have enough funds to withdraw.");
                         Console.WriteLine("Would you like to try again Y/N?");
                         withdrawYesNo();
-                    }
+                    }   
                 }
                 else
                 {
@@ -674,7 +681,6 @@ namespace BankConsoleApp
             bool deleteConfirm = true;
             char deleteSelect = '0';
             Console.WriteLine();
-
 
             if (findAccount(accNumber))
             {
