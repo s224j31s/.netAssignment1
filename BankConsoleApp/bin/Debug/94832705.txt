@@ -1,0 +1,7 @@
+First Name|jon
+Last Name|harris
+address|123 tom st
+Phone Number|1234567890
+email|test@email.com
+Account Number|94832705
+Balance|0

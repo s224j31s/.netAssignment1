@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
+using System.Net;
 
 namespace BankConsoleApp
 {
@@ -137,6 +138,7 @@ namespace BankConsoleApp
             Console.WriteLine("║ Enter your Choice (1-7):\t\t\t║");
             Console.WriteLine("╚═══════════════════════════════════════════════╝");
         }
+        //main menu method after logging in
         private void mainMenu()
         {
             char select = '0';
@@ -196,6 +198,7 @@ namespace BankConsoleApp
         {
             return Console.ReadKey(true);
         }
+        //Console view of the create account function
         private void createAccountView()
         {
             Console.WriteLine("╔═══════════════════════════════════════════════╗");
@@ -208,6 +211,7 @@ namespace BankConsoleApp
             Console.WriteLine("║ 5. Email:                                     ║");
             Console.WriteLine("╚═══════════════════════════════════════════════╝");
         }
+        //Method to create an account. Contains phone number and email validation checks. Will contain sent email check
         private void createAccount()
         {
 
@@ -265,10 +269,25 @@ namespace BankConsoleApp
                         {
                             accNumber = new Random().Next(100000, 99999999);//Generates account number randomly
                             balance = 0;
+
+
+                            Accounts accounts = new Accounts( firstName, lastName, address, phone,  email, accNumber, balance);
+
+                            SmtpClient client = new SmtpClient("smtp.gmail.com",587);
+                            client.Credentials = new NetworkCredential("dotnetassignmentbank32@gmail.com", "Bankconsoleapp1");
+                            client.EnableSsl = true;
+
+                            MailMessage message = new MailMessage(new MailAddress("dotnetassignmentbank32@gmail.com", "Simple Bank"),
+                                                   new MailAddress("dotnetassignmentbank32@gmail.com", firstName));
+
+                            message.Subject = "Welcome to Simple Bank";
+                            message.Body = $"Dear {firstName}, " + " Welcome to Simple Bank. " + "Your details are " + accNumber + firstName 
+                                + lastName + address + phoneNumber + email + balance + ". Kind regards, the Simple Bank Team.";
+                            client.Send(message);
+
                             Console.WriteLine("Account created! Details will be emailed to you.");
                             Console.WriteLine("Account number is: " + accNumber);
 
-                            Accounts accounts = new Accounts( firstName, lastName, address, phone,  email, accNumber, balance);
                             string path1 = accNumber.ToString();
                             string FileName = Path.Combine(path1) + ".txt";//text file joining with account number
                             using (StreamWriter accDetails = File.CreateText(FileName))//creating accountnumber.txt
@@ -385,6 +404,8 @@ namespace BankConsoleApp
 
         }
 
+        //method to check if the number from user input matches a text file, if it matches the account file contents are added to an account 
+        //object and the method returns true. If the text file cannot be found, return false.
         private bool findAccount(string accNumber)
         {
             string FileName = Path.Combine(accNumber) + ".txt";
@@ -407,13 +428,14 @@ namespace BankConsoleApp
                     Accounts validAccount = new Accounts(
                     accInfoList[0], accInfoList[1], accInfoList[2], accInfoList[3], accInfoList[4], Convert.ToInt32(accInfoList[5]), Convert.ToDouble(accInfoList[6]));
                     accounts.Add(validAccount);
-                    return true;
+                    validAccount.AddOldStatements();
+                   
                 }
                 catch
                 {
                     return false;
                 }
-
+                return true;
             }
             else
             {
@@ -465,7 +487,7 @@ namespace BankConsoleApp
                 if (Double.TryParse(amount, out double dblAmount))
                 {
                     Account(Convert.ToInt32(accNumber)).Deposit(dblAmount);
-
+                    Console.WriteLine();
                     Console.WriteLine("Amount deposited. Would you like to make another deposit Y/N?");
                     depositYesNo();
                 }
@@ -554,7 +576,8 @@ namespace BankConsoleApp
                     if (Account(Convert.ToInt32(accNumber)).checkBalance(dblAmount))
                     {
                         Account(Convert.ToInt32(accNumber)).Withdraw(dblAmount);
-                        Console.WriteLine("Amount withdrawn. Would you like to make another deposit Y/N?");
+                        Console.WriteLine();
+                        Console.WriteLine("Amount withdrawn. Would you like to make another withdrawal Y/N?");
                         withdrawYesNo();
                     }
                     else
@@ -563,7 +586,7 @@ namespace BankConsoleApp
                         Console.WriteLine("Account does not have enough funds to withdraw.");
                         Console.WriteLine("Would you like to try again Y/N?");
                         withdrawYesNo();
-                    }
+                    }   
                 }
                 else
                 {
@@ -674,7 +697,6 @@ namespace BankConsoleApp
             bool deleteConfirm = true;
             char deleteSelect = '0';
             Console.WriteLine();
-
 
             if (findAccount(accNumber))
             {

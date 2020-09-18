@@ -1,0 +1,7 @@
+First Name|jon
+Last Name|smith
+address|testing 123
+Phone Number|1234567890
+email|dotnetassignmentbank32@gmail.com
+Account Number|80138281
+Balance|0
