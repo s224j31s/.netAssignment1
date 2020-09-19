@@ -1,12 +1,10 @@
-First Name|test
-Last Name|jon
-address|123 mod st
-Phone Number|1234567890
-email|teste@email.com
-Account Number|31786940
-Balance|5500
-19/09/2020|Deposit|5000|5000
-19/09/2020|Deposit|500|5500
-19/09/2020|Deposit|500|6000
-19/09/2020|Withdraw|500|5500
-
+First Name|Nabin
+Last Name|Sharma
+Address|UTS Building 11, Sydney
+Phone|123456789
+Email|nabin@uts.edu.au
+AccountNo|31786940
+Balance|1000
+10.12.2019|Deposit|200|800
+12.12.2019|Deposit|400|1200
+15.12.2019|Withdraw|200|1000
