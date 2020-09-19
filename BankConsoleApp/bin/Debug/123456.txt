@@ -4,4 +4,20 @@ address|UTS Building 11, Sydney
 Phone Number|123456789
 email|nabin@uts.edu.au
 Account Number|123456
-Balance|7750
+Balance|3061
+19.09.2020|Deposit|500|8250
+19.09.2020|Deposit|450|8700
+19.09.2020|Deposit|500|9200
+19.09.2020|Deposit|600|9800
+19.09.2020|Withdraw|300|9500
+19.09.2020|Withdraw|100|9400
+19.09.2020|Deposit|450|9850
+19.09.2020|Deposit|500|10350
+19.09.2020|Deposit|800|11150
+19.09.2020|Withdraw|450|10700
+19.09.2020|Deposit|999|11699
+19.09.2020|Deposit|450|12149
+19.09.2020|Deposit|900|13049
+19.09.2020|Withdraw|100|12949
+19.09.2020|Withdraw|1000|11949
+19.09.2020|Withdraw|8888|3061
