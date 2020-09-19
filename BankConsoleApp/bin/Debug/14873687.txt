@@ -1,0 +1,7 @@
+First Name|tom
+Last Name|smith
+address|123 jones st
+Phone Number|1234567890
+email|tst@email.com
+Account Number|14873687
+Balance|0

@@ -1,10 +1,15 @@
-﻿using System;
+﻿using BankConsoleApp.Properties;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Net.Mail;
+using System.Text.RegularExpressions;
+using System.Net;
 
 namespace BankConsoleApp
 {

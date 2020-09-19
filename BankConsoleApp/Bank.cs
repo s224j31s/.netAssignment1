@@ -210,27 +210,45 @@ namespace BankConsoleApp
             Console.WriteLine("╚═══════════════════════════════════════════════╝");
         }
         //Method to create an account. Contains phone number and email validation checks. Will contain sent email check
+
+        private bool emptyCheck(string check)
+        {
+            if (String.IsNullOrEmpty(check))
+            {
+                return true;
+            }
+            return false;
+        }
         private void createAccount()
         {
             Console.Clear();
             createAccountView();
             int accNumber;
             double balance;
+            bool fnameCheck = false;
+            bool lnameCheck = false;
+            bool addrCheck = false;
+        
+            
 
             Console.SetCursorPosition(16, 3); 
             string firstName = Console.ReadLine();
+            
 
             Console.SetCursorPosition(15, 4); 
             string lastName = Console.ReadLine();
+           
 
             Console.SetCursorPosition(13, 5); 
             string address = Console.ReadLine();
+          
 
             Console.SetCursorPosition(11, 6); 
             string phone = Console.ReadLine();
 
             Console.SetCursorPosition(11, 7);
             string email = Console.ReadLine();
+
 
             //Email regex pattern source https://www.rhyous.com/2010/06/15/csharp-email-regular-expression/
             string pattern = @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*" + "@" + @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$";
@@ -254,14 +272,36 @@ namespace BankConsoleApp
 
             char select = '0';
             bool detailsValid = true;
+            bool noEmpty = false;
+            emptyCheck(firstName);
+            emptyCheck(address);
+            emptyCheck(lastName);
             do
             {
                 detailsValid = true;
+
+                if (emptyCheck(firstName) == false)
+                {
+                    fnameCheck = true;
+                }
+                if (emptyCheck(lastName) == false)
+                {
+                    lnameCheck = true;
+                }
+                if (emptyCheck(address) == false)
+                {
+                    addrCheck = true;
+                }
+
+                if (fnameCheck == true && lnameCheck == true && addrCheck == true)
+                {
+                    noEmpty = true;
+                }
                 select = readInput().KeyChar;
                 switch (select)
                 {
                     case 'y':
-                        if (phoneSuccess == true && emailMatch == true)
+                        if (phoneSuccess == true && emailMatch == true && noEmpty == true)
                         {
                             accNumber = new Random().Next(100000, 99999999);//Generates account number randomly
                             balance = 0;
@@ -270,16 +310,41 @@ namespace BankConsoleApp
                             SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
                             client.Credentials = new NetworkCredential("dotnetassignmentbank32@gmail.com", "Bankconsoleapp1");
                             client.EnableSsl = true;
+                            bool emailSent = true;
+                            try {
+                                MailMessage message = new MailMessage(new MailAddress("dotnetassignmentbank32@gmail.com", "Simple Bank"),
+                                                 new MailAddress("dotnetassignmentbank32@gmail.com", firstName));
+                                message.IsBodyHtml = true;
+                                message.Subject = "Welcome to Simple Bank";
 
-                            MailMessage message = new MailMessage(new MailAddress("dotnetassignmentbank32@gmail.com", "Simple Bank"),
-                                                   new MailAddress("dotnetassignmentbank32@gmail.com", firstName));
+                                message.Body = string.Format($"Dear {firstName},<br><br>" +
+                              "Welcome to Simple Bank !<br><br>" +
+                              "Your account details are as follows:<br>" +
 
-                            message.Subject = "Welcome to Simple Bank";
-                            message.Body = $"Dear {firstName}, " + " Welcome to Simple Bank. " + "Your details are " + accNumber + firstName
-                                + lastName + address + phone + email + balance + ". Kind regards, the Simple Bank Team.";
-                            client.Send(message);
+                              $"Account number: {accNumber}<br>" +
+                              $"First name: {firstName}<br>" +
+                              $"Last name: {lastName}<br>" +
+                              $"Address: {address}<br>" +
+                              $"Phone number: {phone}<br>" +
+                              $"Email: {email}<br><br>" +
 
-                            Console.WriteLine("Account created! Details will be emailed to you.");
+                              "Kind regards,<br>" +
+                              "The Simple Bank Team");
+                                client.Send(message);
+                                emailSent = true;
+                            }
+                            catch {
+                                emailSent = false;
+                            }
+
+                            if (emailSent == true)
+                            {
+                                Console.WriteLine("Account created! Details will be emailed to you.");
+                            } else
+                            {
+                                Console.WriteLine("Account details could not be sent at this time");
+                            }
+
                             Console.WriteLine("Account number is: " + accNumber);
 
                             string path1 = accNumber.ToString();
@@ -297,21 +362,29 @@ namespace BankConsoleApp
                             Console.WriteLine("Do you wish to make another account? Y/N");
                             createAccYesNo();
                         }
-                        else if (phoneSuccess == false && emailMatch == false)
+                        else if (noEmpty == true && phoneSuccess == false && emailMatch == false || noEmpty == false && phoneSuccess == true && emailMatch == true ||
+                             noEmpty == false && phoneSuccess == false && emailMatch == true ||
+                              noEmpty == false && phoneSuccess == false && emailMatch == false)
+                        {
+                            Console.WriteLine("Cannot have empty fields. Would you like to try again (Y/N)?");
+                            createAccYesNo();
+                        }
+                        else if (phoneSuccess == false && emailMatch == false && noEmpty == false)
                         {
                             Console.WriteLine("Error. Details invalid. Would you like to try again (Y/N)?");
                             createAccYesNo();
                         }
-                        else if (emailMatch == false && phoneSuccess == true)
+                        else if (emailMatch == false && phoneSuccess == true && noEmpty == true)
                             {
                                 Console.WriteLine("Email is invalid. Would you like to try again (Y/N)?");
                             createAccYesNo();
                         }
-                        else if (phoneSuccess == false && emailMatch == true)
+                        else if (phoneSuccess == false && emailMatch == true && noEmpty == true)
                         {
                             Console.WriteLine("Phone Number is invalid. Would you like to try again (Y/N)?");
                             createAccYesNo();
                         }
+
                         detailsValid = false;
                         break;
                     case 'n':
@@ -683,9 +756,31 @@ namespace BankConsoleApp
                // Account(Convert.ToInt32(accNumber)).viewAccDetails();
                 Account(Convert.ToInt32(accNumber)).PrintStatement();
                 Console.WriteLine("Email statement? Y/N");
-                yesNoStatement();
 
-
+                char select = '0';
+                bool retryStatement = true;
+                select = readInput().KeyChar;
+                do
+                {
+                    switch (select)
+                    {
+                        case 'y':
+                            retryStatement = false;
+                            Account(Convert.ToInt32(accNumber)).emailStatement();
+                            Console.WriteLine("Statement Emailed. Would you like to email another statement? Y/N");
+                            yesNoStatement();
+                            break;
+                        case 'n':
+                            retryStatement = false;
+                            Console.WriteLine("Statement not emailed. Press any key to return to main menu");
+                            mainMenu();
+                            break;
+                        default:
+                            retryStatement = true;
+                            select = readInput().KeyChar;
+                            break;
+                    }
+                } while (retryStatement == true);
             }
             else
                 Console.WriteLine("Error. Please enter a valid account number. Try again? Y/N");

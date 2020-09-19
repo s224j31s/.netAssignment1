@@ -1,0 +1,7 @@
+First Name|Daniel
+Last Name|Smith
+address|123 Strive St
+Phone Number|1234567890
+email|test@mail.com
+Account Number|41227298
+Balance|0
