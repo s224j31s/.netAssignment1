@@ -1,0 +1,21 @@
+First Name|Nabin
+Last Name|Sharma
+address|UTS Building 11, Sydney
+Phone Number|123456789
+email|nabin@uts.edu.au
+Account Number|123456
+Balance|6510
+
+
+19.09.2020|Deposit|500|500
+19.09.2020|Deposit|100|600
+19.09.2020|Withdraw|40|560
+
+
+19.09.2020|Deposit|500|1060
+19.09.2020|Deposit|5000|6060
+19.09.2020|Withdraw|450|5610
+
+
+19.09.2020|Deposit|900|6510
+

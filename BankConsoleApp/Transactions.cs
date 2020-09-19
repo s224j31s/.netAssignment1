@@ -25,14 +25,14 @@ namespace BankConsoleApp
 
         public string fileString()
         {
-            return string.Format($"{date.ToString("dd/MM/yyyy")}|" +
+            return string.Format($"{date.ToString("dd.MM.yyyy")}|" +
                                  $"{type}|{debitCredit}|{balance}\n");
         }
 
         public string statementString()
         {
             return string.Format($"{date.ToString("dd/MM/yyyy")}|" +
-                                $"{type}|{debitCredit}|{balance}\n");
+                                $"{type}|{debitCredit}|{balance}");
         }
     }
 }
