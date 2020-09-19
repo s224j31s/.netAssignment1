@@ -1,0 +1,21 @@
+First Name|jon
+Last Name|smith
+address|123 bell st
+Phone Number|1234567899
+email|test@email.com
+Account Number|41835585
+Balance|1045
+19.09.2020|Deposit|500|500
+
+19.09.2020|Deposit|450|950
+
+19.09.2020|Deposit|320|1270
+
+
+19.09.2020|Deposit|500|500
+19.09.2020|Deposit|450|950
+19.09.2020|Deposit|320|1270
+19.09.2020|Withdraw|123|1147
+19.09.2020|Withdraw|99|1048
+19.09.2020|Withdraw|3|1045
+

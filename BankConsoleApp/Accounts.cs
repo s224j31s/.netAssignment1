@@ -17,6 +17,8 @@ namespace BankConsoleApp
         private double balance;
         private string email;
         private List<Transactions> bankStatement;
+        private List<string> oldStatements;
+        private List<string> newStatements;
 
         public Accounts(string firstName, string lastName, string address, string phoneNo, string email, int accNumber, double balance)
         {
@@ -28,22 +30,37 @@ namespace BankConsoleApp
             this.balance = balance;
             this.email = email;
             bankStatement = new List<Transactions>();
-
+            newStatements = new List<string>();
+            oldStatements = new List<string>();
 
         }
+
+
         //method for depositing money into an account
         public void Deposit(double amount)
         {
             balance += amount;
             depositStatement(amount);
+
             string FileName = Path.Combine(accNumber.ToString()) + ".txt";//text file joining with account number
 
             //File.WriteAllText(string.Format($"{accNumber}.txt"),
             //string.Format($"{accountNumber}\n{firstName}\n{lastName}\n" +
             //$"{address}\n{phoNumber}\n{balance:0.00}\n{email}\n{statementStringBlock}"));
             string statementLists = "";
+            string existingStatements = "";
+
             foreach (Transactions transaction in bankStatement)
+            {
                 statementLists += transaction.fileString();
+              
+            }
+
+            foreach (string line in oldStatements)
+            {
+                existingStatements += line + "\n";
+            }
+            existingStatements += statementLists;
             using (StreamWriter accDetails = new StreamWriter(FileName))//update account balance
             {
                 accDetails.WriteLine("First Name|" + firstName);
@@ -53,26 +70,44 @@ namespace BankConsoleApp
                 accDetails.WriteLine("email|" + email);
                 accDetails.WriteLine("Account Number|" + accNumber);
                 accDetails.WriteLine("Balance|" + balance);
+                foreach (string line in oldStatements)
+                {
+                    accDetails.WriteLine(line);
+                }
+                //accDetails.WriteLine(existingStatements);
                 accDetails.WriteLine(statementLists);
             }
 
         }
 
-        private void depositStatement(double amount) {
+        private void depositStatement(double amount)
+        {
             bankStatement.Add(new Transactions(DateTime.Now, "Deposit", amount, balance));
         }
 
 
-
-        public void Withdraw(double amount) {
+        public void Withdraw(double amount)
+        {
             string FileName = Path.Combine(accNumber.ToString()) + ".txt";//text file joining with account number
 
-            if (balance >= amount) {
+            if (balance >= amount)
+            {
                 balance -= amount;
                 withdrawStatement(amount);
                 string statementLists = "";
+                string existingStatements = "";
+
                 foreach (Transactions transaction in bankStatement)
+                {
                     statementLists += transaction.fileString();
+  
+                }
+
+                foreach (string line in oldStatements)
+                {
+                    existingStatements += line + "\n";
+                }
+                existingStatements += statementLists;
                 using (StreamWriter accDetails = new StreamWriter(FileName))//update account balance
                 {
                     accDetails.WriteLine("First Name|" + firstName);
@@ -82,6 +117,11 @@ namespace BankConsoleApp
                     accDetails.WriteLine("email|" + email);
                     accDetails.WriteLine("Account Number|" + accNumber);
                     accDetails.WriteLine("Balance|" + balance);
+                    foreach (string line in oldStatements)
+                    {
+                        accDetails.WriteLine(line);
+                    }
+                    //accDetails.WriteLine(existingStatements);
                     accDetails.WriteLine(statementLists);
 
                 }
@@ -97,13 +137,16 @@ namespace BankConsoleApp
         {
             string FileName = Path.Combine(accNumber.ToString()) + ".txt";
             string[] accountFile = File.ReadAllLines(FileName);
-            string[] oldStatements = accountFile.Skip(7).ToArray();
-            foreach (string transaction in oldStatements)
+            string[] existingStatements = accountFile.Skip(7).ToArray();
+            
+            foreach (string transaction in existingStatements)
             {
-                char[] delimiter = { '|' };
-                string[] txnInfo = transaction.Split(delimiter);
-                bankStatement.Add(new Transactions(Convert.ToDateTime(txnInfo[0]), txnInfo[1], Convert.ToDouble(txnInfo[2]),
-                        Convert.ToDouble(txnInfo[3])));
+                ///char[] delimiter = { '|' };
+                //string[] txnInfo = transaction.Split(delimiter, StringSplitOptions.RemoveEmptyEntries);
+                oldStatements.Add(transaction);
+                // bankStatement.Add(new Transactions(Convert.ToDateTime(txnInfo[0]), txnInfo[1], Convert.ToDouble(txnInfo[2]),
+                //        Convert.ToDouble(txnInfo[3])));
+
             }
         }
 
@@ -142,8 +185,27 @@ namespace BankConsoleApp
             Console.WriteLine(" Date".PadRight(29, ' ') + "Description".PadRight(24, ' ') + "Debit".PadRight(16, ' ') +
                               "Credit".PadRight(16, ' ') + "Balance".PadRight(16, ' '));
             Console.WriteLine(" ".PadRight(100, '-'));
-            foreach (Transactions transaction in bankStatement)
-                Console.WriteLine(" " + transaction.fileString());
+            List<string> infoList = new List<string>();
+            foreach (string line in oldStatements)
+            {
+                //Console.WriteLine(" " + line);
+                infoList.Add(line);
+
+            }
+            foreach (Transactions transaction in bankStatement) {
+                //Console.WriteLine(" " + transaction.fileString());
+                infoList.Add(transaction.fileString());
+            }
+
+            infoList.Reverse();
+            string[] lastStatements = infoList.Take(5).ToArray();
+            List<string> fiveStatements = new List<string>();
+            fiveStatements.AddRange(lastStatements);
+            foreach (string statement in fiveStatements) {
+                
+                Console.WriteLine(" " + statement);
+            }
+                
             Console.WriteLine();
         }
 

@@ -1,0 +1,14 @@
+First Name|test
+Last Name|smith
+address|123 jones st
+Phone Number|1234567890
+email|test@email.com
+Account Number|73500621
+Balance|14550
+19.09.2020|Deposit|5000|5000
+19.09.2020|Withdraw|450|4550
+
+19.09.2020|Deposit|5000|9550
+
+19.09.2020|Deposit|5000|14550
+

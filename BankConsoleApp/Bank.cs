@@ -303,8 +303,8 @@ namespace BankConsoleApp
                             createAccYesNo();
                         }
                         else if (emailMatch == false && phoneSuccess == true)
-                        {
-                            Console.WriteLine("Email is invalid. Would you like to try again (Y/N)?");
+                            {
+                                Console.WriteLine("Email is invalid. Would you like to try again (Y/N)?");
                             createAccYesNo();
                         }
                         else if (phoneSuccess == false && emailMatch == true)
@@ -431,13 +431,14 @@ namespace BankConsoleApp
                     Accounts validAccount = new Accounts(
                     accInfoList[0], accInfoList[1], accInfoList[2], accInfoList[3], accInfoList[4], Convert.ToInt32(accInfoList[5]), Convert.ToDouble(accInfoList[6]));
                     accounts.Add(validAccount);
-                   // validAccount.AddOldStatements();
+                    validAccount.AddOldStatements();
 
                 }
                 catch
                 {
                     return false;
                 }
+
                 return true;
             }
             else
