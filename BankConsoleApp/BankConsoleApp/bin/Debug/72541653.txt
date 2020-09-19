@@ -1,0 +1,10 @@
+First Name|Dragon
+Last Name|ONe one
+address|123 smith st
+Phone Number|1234567890
+email|test@email.com
+Account Number|72541653
+Balance|2499
+20.09.2020|Deposit|1000|1000
+20.09.2020|Deposit|500|1500
+20.09.2020|Deposit|999|2499

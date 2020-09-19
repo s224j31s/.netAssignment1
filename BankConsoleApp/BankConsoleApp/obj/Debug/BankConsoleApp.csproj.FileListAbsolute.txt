@@ -1,0 +1,54 @@
+C:\Users\admin\Documents\Assignment1\BankConsoleApp\bin\Debug\BankConsoleApp.exe.config
+C:\Users\admin\Documents\Assignment1\BankConsoleApp\bin\Debug\BankConsoleApp.exe
+C:\Users\admin\Documents\Assignment1\BankConsoleApp\bin\Debug\BankConsoleApp.pdb
+C:\Users\admin\Documents\Assignment1\BankConsoleApp\obj\Debug\BankConsoleApp.csprojAssemblyReference.cache
+C:\Users\admin\Documents\Assignment1\BankConsoleApp\obj\Debug\BankConsoleApp.Properties.Resources.resources
+C:\Users\admin\Documents\Assignment1\BankConsoleApp\obj\Debug\BankConsoleApp.csproj.GenerateResource.cache
+C:\Users\admin\Documents\Assignment1\BankConsoleApp\obj\Debug\BankConsoleApp.csproj.CoreCompileInputs.cache
+C:\Users\admin\Documents\Assignment1\BankConsoleApp\obj\Debug\BankConsoleApp.exe
+C:\Users\admin\Documents\Assignment1\BankConsoleApp\obj\Debug\BankConsoleApp.pdb
+C:\Users\user 1\Documents\UTS 2020\Sem 2\app dev with .net\Assignment1\BankConsoleApp\bin\Debug\BankConsoleApp.exe.config
+C:\Users\user 1\Documents\UTS 2020\Sem 2\app dev with .net\Assignment1\BankConsoleApp\bin\Debug\BankConsoleApp.exe
+C:\Users\user 1\Documents\UTS 2020\Sem 2\app dev with .net\Assignment1\BankConsoleApp\bin\Debug\BankConsoleApp.pdb
+C:\Users\user 1\Documents\UTS 2020\Sem 2\app dev with .net\Assignment1\BankConsoleApp\obj\Debug\BankConsoleApp.csprojAssemblyReference.cache
+C:\Users\user 1\Documents\UTS 2020\Sem 2\app dev with .net\Assignment1\BankConsoleApp\obj\Debug\BankConsoleApp.Properties.Resources.resources
+C:\Users\user 1\Documents\UTS 2020\Sem 2\app dev with .net\Assignment1\BankConsoleApp\obj\Debug\BankConsoleApp.csproj.GenerateResource.cache
+C:\Users\user 1\Documents\UTS 2020\Sem 2\app dev with .net\Assignment1\BankConsoleApp\obj\Debug\BankConsoleApp.csproj.CoreCompileInputs.cache
+C:\Users\user 1\Documents\UTS 2020\Sem 2\app dev with .net\Assignment1\BankConsoleApp\obj\Debug\BankConsoleApp.exe
+C:\Users\user 1\Documents\UTS 2020\Sem 2\app dev with .net\Assignment1\BankConsoleApp\obj\Debug\BankConsoleApp.pdb
+C:\Users\user 1\Documents\UTS 2020\Sem 2\app dev with .net\Assignment1\BankConsoleApp\bin\Debug\login.txt
+C:\Users\admin\Documents\Assignment1\BankConsoleApp\bin\Debug\100001.txt
+C:\Users\admin\Documents\Assignment1\BankConsoleApp\bin\Debug\login.txt
+C:\Users\user 1\Downloads\Assignment1-20200902T034713Z-001\Assignment1\BankConsoleApp\bin\Debug\100001.txt
+C:\Users\user 1\Downloads\Assignment1-20200902T034713Z-001\Assignment1\BankConsoleApp\bin\Debug\login.txt
+C:\Users\user 1\Downloads\Assignment1-20200902T034713Z-001\Assignment1\BankConsoleApp\bin\Debug\BankConsoleApp.exe.config
+C:\Users\user 1\Downloads\Assignment1-20200902T034713Z-001\Assignment1\BankConsoleApp\bin\Debug\BankConsoleApp.exe
+C:\Users\user 1\Downloads\Assignment1-20200902T034713Z-001\Assignment1\BankConsoleApp\bin\Debug\BankConsoleApp.pdb
+C:\Users\user 1\Downloads\Assignment1-20200902T034713Z-001\Assignment1\BankConsoleApp\obj\Debug\BankConsoleApp.csprojAssemblyReference.cache
+C:\Users\user 1\Downloads\Assignment1-20200902T034713Z-001\Assignment1\BankConsoleApp\obj\Debug\BankConsoleApp.Properties.Resources.resources
+C:\Users\user 1\Downloads\Assignment1-20200902T034713Z-001\Assignment1\BankConsoleApp\obj\Debug\BankConsoleApp.csproj.GenerateResource.cache
+C:\Users\user 1\Downloads\Assignment1-20200902T034713Z-001\Assignment1\BankConsoleApp\obj\Debug\BankConsoleApp.csproj.CoreCompileInputs.cache
+C:\Users\user 1\Downloads\Assignment1-20200902T034713Z-001\Assignment1\BankConsoleApp\obj\Debug\BankConsoleApp.exe
+C:\Users\user 1\Downloads\Assignment1-20200902T034713Z-001\Assignment1\BankConsoleApp\obj\Debug\BankConsoleApp.pdb
+C:\Users\user 1\Downloads\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\bin\Debug\100001.txt
+C:\Users\user 1\Downloads\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\bin\Debug\login.txt
+C:\Users\user 1\Downloads\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\bin\Debug\BankConsoleApp.exe.config
+C:\Users\user 1\Downloads\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\bin\Debug\BankConsoleApp.exe
+C:\Users\user 1\Downloads\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\bin\Debug\BankConsoleApp.pdb
+C:\Users\user 1\Downloads\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\obj\Debug\BankConsoleApp.csprojAssemblyReference.cache
+C:\Users\user 1\Downloads\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\obj\Debug\BankConsoleApp.Properties.Resources.resources
+C:\Users\user 1\Downloads\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\obj\Debug\BankConsoleApp.csproj.GenerateResource.cache
+C:\Users\user 1\Downloads\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\obj\Debug\BankConsoleApp.csproj.CoreCompileInputs.cache
+C:\Users\user 1\Downloads\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\obj\Debug\BankConsoleApp.exe
+C:\Users\user 1\Downloads\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\obj\Debug\BankConsoleApp.pdb
+C:\Users\user 1\Documents\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\obj\Debug\BankConsoleApp.csprojAssemblyReference.cache
+C:\Users\user 1\Documents\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\obj\Debug\BankConsoleApp.Properties.Resources.resources
+C:\Users\user 1\Documents\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\obj\Debug\BankConsoleApp.csproj.GenerateResource.cache
+C:\Users\user 1\Documents\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\obj\Debug\BankConsoleApp.csproj.CoreCompileInputs.cache
+C:\Users\user 1\Documents\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\obj\Debug\BankConsoleApp.exe
+C:\Users\user 1\Documents\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\obj\Debug\BankConsoleApp.pdb
+C:\Users\user 1\Documents\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\bin\Debug\100001.txt
+C:\Users\user 1\Documents\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\bin\Debug\login.txt
+C:\Users\user 1\Documents\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\bin\Debug\BankConsoleApp.exe.config
+C:\Users\user 1\Documents\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\bin\Debug\BankConsoleApp.exe
+C:\Users\user 1\Documents\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\bin\Debug\BankConsoleApp.pdb

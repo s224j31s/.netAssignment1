@@ -1,0 +1,10 @@
+First Name|TOm
+Last Name|Smith
+address|1234 John Street
+Phone Number|1234567890
+email|dragononeone@email.com
+Account Number|91743930
+Balance|629
+20.09.2020|Deposit|450|450
+20.09.2020|Withdraw|20|430
+20.09.2020|Deposit|199|629

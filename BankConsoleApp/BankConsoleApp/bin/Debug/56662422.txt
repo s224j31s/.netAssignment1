@@ -1,0 +1,10 @@
+First Name|Dan
+Last Name|James
+address|123 Smith St
+Phone Number|1234567890
+email|test@email.com
+Account Number|56662422
+Balance|520
+20.09.2020|Deposit|100|100
+20.09.2020|Withdraw|30|70
+20.09.2020|Deposit|450|520
