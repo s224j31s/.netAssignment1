@@ -32,7 +32,8 @@ namespace BankConsoleApp
             } while (!bank.loggedIn);
 
         }
-
+        //Initiate the login process. Checks the login process by username and password. Requires login.txt file or the appliation will prompt
+        //the user that it is missing and thus unable to login.
         private Boolean Login()
         {
             bool loginDetails = false;
@@ -95,9 +96,11 @@ namespace BankConsoleApp
                             }
                     }
                 }
-                catch (IndexOutOfRangeException)
+                catch 
                 {
-
+                    Console.WriteLine("Error. Press any key to exit");
+                    Console.ReadKey();
+                    Environment.Exit(0);
                 }
             }
             else
@@ -109,6 +112,7 @@ namespace BankConsoleApp
             }
             return loggedIn;
         }
+        //console view of login
         private void loginMenuView()
         {
             Console.WriteLine("╔═══════════════════════════════════════════════╗");
@@ -120,6 +124,7 @@ namespace BankConsoleApp
             Console.WriteLine("║ Password:                                     ║");
             Console.WriteLine("╚═══════════════════════════════════════════════╝");
         }
+        //console view of main menu
         private void mainMenuView()
         {
             Console.WriteLine("╔═══════════════════════════════════════════════╗");
@@ -137,7 +142,8 @@ namespace BankConsoleApp
             Console.WriteLine("║ Enter your Choice (1-7):\t\t\t║");
             Console.WriteLine("╚═══════════════════════════════════════════════╝");
         }
-        //main menu method after logging in
+        //main menu method after logging in. Cases 1-7 are options for the user to input. any other case results in user being informed of invalid choices.
+
         private void mainMenu()
         {
             char select = '0';
@@ -192,6 +198,7 @@ namespace BankConsoleApp
             }
         }
 
+        //reads console input
         private ConsoleKeyInfo readInput()
         {
             return Console.ReadKey(true);
@@ -209,28 +216,43 @@ namespace BankConsoleApp
             Console.WriteLine("║ 5. Email:                                     ║");
             Console.WriteLine("╚═══════════════════════════════════════════════╝");
         }
-        //Method to create an account. Contains phone number and email validation checks. Will contain sent email check
+
+
+        //checks if create account fields are empty
+        private bool emptyCheck(string check)
+        {
+            if (String.IsNullOrEmpty(check))
+            {
+                return true;
+            }
+            return false;
+        }
+        //Method to create an account. Contains phone number, empty field and email validation checks. Contains email functionality to email the user their account details upon success
         private void createAccount()
         {
             Console.Clear();
             createAccountView();
             int accNumber;
             double balance;
+            bool fnameCheck = false;
+            bool lnameCheck = false;
+            bool addrCheck = false;
 
-            Console.SetCursorPosition(16, 3); 
+            Console.SetCursorPosition(16, 3);
             string firstName = Console.ReadLine();
 
-            Console.SetCursorPosition(15, 4); 
+            Console.SetCursorPosition(15, 4);
             string lastName = Console.ReadLine();
 
-            Console.SetCursorPosition(13, 5); 
+            Console.SetCursorPosition(13, 5);
             string address = Console.ReadLine();
 
-            Console.SetCursorPosition(11, 6); 
+            Console.SetCursorPosition(11, 6);
             string phone = Console.ReadLine();
 
             Console.SetCursorPosition(11, 7);
             string email = Console.ReadLine();
+
 
             //Email regex pattern source https://www.rhyous.com/2010/06/15/csharp-email-regular-expression/
             string pattern = @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*" + "@" + @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$";
@@ -254,14 +276,36 @@ namespace BankConsoleApp
 
             char select = '0';
             bool detailsValid = true;
+            bool noEmpty = false;
+            emptyCheck(firstName);
+            emptyCheck(address);
+            emptyCheck(lastName);
             do
             {
                 detailsValid = true;
+
+                if (emptyCheck(firstName) == false)
+                {
+                    fnameCheck = true;
+                }
+                if (emptyCheck(lastName) == false)
+                {
+                    lnameCheck = true;
+                }
+                if (emptyCheck(address) == false)
+                {
+                    addrCheck = true;
+                }
+
+                if (fnameCheck == true && lnameCheck == true && addrCheck == true)
+                {
+                    noEmpty = true;
+                }
                 select = readInput().KeyChar;
                 switch (select)
                 {
                     case 'y':
-                        if (phoneSuccess == true && emailMatch == true)
+                        if (phoneSuccess == true && emailMatch == true && noEmpty == true)
                         {
                             accNumber = new Random().Next(100000, 99999999);//Generates account number randomly
                             balance = 0;
@@ -270,16 +314,44 @@ namespace BankConsoleApp
                             SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
                             client.Credentials = new NetworkCredential("dotnetassignmentbank32@gmail.com", "Bankconsoleapp1");
                             client.EnableSsl = true;
+                            bool emailSent = true;
+                            try
+                            {
+                                MailMessage message = new MailMessage(new MailAddress("dotnetassignmentbank32@gmail.com", "Simple Bank"),
+                                                 new MailAddress("dotnetassignmentbank32@gmail.com", firstName));
+                                message.IsBodyHtml = true;
+                                message.Subject = "Welcome to Simple Bank";
 
-                            MailMessage message = new MailMessage(new MailAddress("dotnetassignmentbank32@gmail.com", "Simple Bank"),
-                                                   new MailAddress("dotnetassignmentbank32@gmail.com", firstName));
+                                message.Body = string.Format($"Dear {firstName},<br><br>" +
+                              "Welcome to Simple Bank !<br><br>" +
+                              "Your account details are as follows:<br>" +
 
-                            message.Subject = "Welcome to Simple Bank";
-                            message.Body = $"Dear {firstName}, " + " Welcome to Simple Bank. " + "Your details are " + accNumber + firstName
-                                + lastName + address + phone + email + balance + ". Kind regards, the Simple Bank Team.";
-                            client.Send(message);
+                              $"Account number: {accNumber}<br>" +
+                              $"First name: {firstName}<br>" +
+                              $"Last name: {lastName}<br>" +
+                              $"Address: {address}<br>" +
+                              $"Phone number: {phone}<br>" +
+                              $"Email: {email}<br><br>" +
 
-                            Console.WriteLine("Account created! Details will be emailed to you.");
+                              "Kind regards,<br>" +
+                              "The Simple Bank Team");
+                                client.Send(message);
+                                emailSent = true;
+                            }
+                            catch
+                            {
+                                emailSent = false;
+                            }
+
+                            if (emailSent == true)
+                            {
+                                Console.WriteLine("Account created! Details will be emailed to you.");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Account details could not be sent at this time");
+                            }
+
                             Console.WriteLine("Account number is: " + accNumber);
 
                             string path1 = accNumber.ToString();
@@ -297,21 +369,29 @@ namespace BankConsoleApp
                             Console.WriteLine("Do you wish to make another account? Y/N");
                             createAccYesNo();
                         }
-                        else if (phoneSuccess == false && emailMatch == false)
+                        else if (noEmpty == true && phoneSuccess == false && emailMatch == false || noEmpty == false && phoneSuccess == true && emailMatch == true ||
+                             noEmpty == false && phoneSuccess == false && emailMatch == true ||
+                              noEmpty == false && phoneSuccess == false && emailMatch == false)
+                        {
+                            Console.WriteLine("Cannot have empty fields. Would you like to try again (Y/N)?");
+                            createAccYesNo();
+                        }
+                        else if (phoneSuccess == false && emailMatch == false && noEmpty == false)
                         {
                             Console.WriteLine("Error. Details invalid. Would you like to try again (Y/N)?");
                             createAccYesNo();
                         }
-                        else if (emailMatch == false && phoneSuccess == true)
-                            {
-                                Console.WriteLine("Email is invalid. Would you like to try again (Y/N)?");
+                        else if (emailMatch == false && phoneSuccess == true && noEmpty == true)
+                        {
+                            Console.WriteLine("Email is invalid. Would you like to try again (Y/N)?");
                             createAccYesNo();
                         }
-                        else if (phoneSuccess == false && emailMatch == true)
+                        else if (phoneSuccess == false && emailMatch == true && noEmpty == true)
                         {
                             Console.WriteLine("Phone Number is invalid. Would you like to try again (Y/N)?");
                             createAccYesNo();
                         }
+
                         detailsValid = false;
                         break;
                     case 'n':
@@ -325,6 +405,7 @@ namespace BankConsoleApp
             } while (detailsValid == true);
         }
 
+        //Reusable options for yes no choices in create account
         private void createAccYesNo()
         {
             char yesNoSelect = '0';
@@ -354,6 +435,7 @@ namespace BankConsoleApp
             }
 
         }
+        //console view for search account
         private void searchAccountView()
         {
             Console.WriteLine("╔═══════════════════════════════════════════════╗");
@@ -362,7 +444,7 @@ namespace BankConsoleApp
             Console.WriteLine("║ \tAccount Number:\t\t\t\t║");
             Console.WriteLine("╚═══════════════════════════════════════════════╝");
         }
-
+        //search method function. Runs checks to see if an account exists then displays it. Will print console messages if not found or invalid numbers are inputted.
         private void searchAccount()
         {
             bool searching = true;
@@ -374,35 +456,45 @@ namespace BankConsoleApp
                 Console.SetCursorPosition(23, 3);
                 string accNumber = Console.ReadLine();
                 Console.SetCursorPosition(0, 8);
-
-                if (findAccount(accNumber))
+                try
                 {
-                    try
+                    if (findAccount(accNumber))
                     {
-                        Account(Convert.ToInt32(accNumber)).viewAccDetails();
-                        Console.WriteLine("Would you like to search for another account Y/N?");
+                        try
+                        {
+                            Account(Convert.ToInt32(accNumber)).viewAccDetails();
+                            Console.WriteLine("Would you like to search for another account Y/N?");
+                            searchAccYesNo();
+
+                        }
+                        catch (NullReferenceException)
+                        {
+                            Console.WriteLine();
+                            Console.WriteLine("Error. Account was not created through the application. Try again Y/N");
+                            searchAccYesNo();
+                        }
+                        catch
+                        {
+                            Console.WriteLine("Error. Please enter a valid number. Try again Y/N");
+                            searchAccYesNo();
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Error. Account Number not found");
+                        Console.WriteLine("Would you like to try search again? Y/N");
                         searchAccYesNo();
 
-                    }
-                    catch (NullReferenceException)
-                    {
-                        Console.WriteLine();
-                        Console.WriteLine("Error. Account was not created through the application. Try again Y/N");
-                        searchAccYesNo();
-                    }
-                    catch
-                    {
-                        Console.WriteLine("Error. Please enter a valid number. Try again Y/N");
-                        searchAccYesNo();
                     }
                 }
-                else
+                catch (ArgumentException)
                 {
-                    Console.WriteLine("Error. Account Number not found");
-                    Console.WriteLine("Would you like to try search again? Y/N");
-                    searchAccYesNo();
-
+                    Console.WriteLine();
+                    Console.WriteLine("Error. Please return to MainMenu by pressing any key");
+                    Console.ReadKey();
+                    mainMenu();
                 }
+
             } while (searching == true);
 
         }
@@ -447,7 +539,7 @@ namespace BankConsoleApp
             }
 
         }
-
+        //yes no choices for search
         private void searchAccYesNo()
         {
             char select = '0';
@@ -475,6 +567,7 @@ namespace BankConsoleApp
                 }
             } while (searchYesNo == true);
         }
+        //deposit account function. Utilises search and checks for valid inputs. Informs user via console if accounts are not found or invalid inputs
         private void depositAcc()
         {
             Console.Clear();
@@ -486,52 +579,52 @@ namespace BankConsoleApp
 
             try
             {
-                string FileName = Path.Combine(accNumber) + ".txt";//text file joining with account number
-            }
-            catch(ArgumentException)
-            {
-                Console.WriteLine();
-                Console.WriteLine("Error. Please return to MainMenu by pressing any key");
-                Console.ReadKey();
-                mainMenu();
-            }
-           
-
-            if (findAccount(accNumber))
-            {
-
-                if (Double.TryParse(amount, out double dblAmount))
+                if (findAccount(accNumber))
                 {
-                    try {
-                        Account(Convert.ToInt32(accNumber)).Deposit(dblAmount);
-                        Console.WriteLine();
-                        Console.WriteLine("Amount deposited. Would you like to make another deposit Y/N?");
-                        depositYesNo();
+                    if (Double.TryParse(amount, out double dblAmount))
+                    {
+                        try
+                        {
+                            Account(Convert.ToInt32(accNumber)).Deposit(dblAmount);
+                            Console.WriteLine();
+                            Console.WriteLine("Amount deposited. Would you like to make another deposit Y/N?");
+                            depositYesNo();
+                        }
+                        catch (NullReferenceException)
+                        {
+                            Console.WriteLine();
+                            Console.WriteLine("Error. Account was not created through the application. Try again with a valid account? Y/N");
+                            depositYesNo();
+                        }
                     }
-                    catch (NullReferenceException)
+                    else
                     {
                         Console.WriteLine();
-                        Console.WriteLine("Error. Account was not created through the application. Try again with a valid account? Y/N");
+                        Console.WriteLine("Error: Please enter a valid amount");
+                        Console.WriteLine("Would you like to try again Y/N?");
                         depositYesNo();
                     }
                 }
                 else
                 {
                     Console.WriteLine();
-                    Console.WriteLine("Error: Please enter a valid amount");
-                    Console.WriteLine("Would you like to try again Y/N?");
+                    Console.WriteLine("Error. Account Number not found");
+                    Console.WriteLine("Would you like to try search again? Y/N");
                     depositYesNo();
                 }
             }
-            else
+            catch (ArgumentException)
             {
                 Console.WriteLine();
-                Console.WriteLine("Error. Account Number not found");
-                Console.WriteLine("Would you like to try search again? Y/N");
-                depositYesNo();
+                Console.WriteLine("Error. Please return to MainMenu by pressing any key");
+                Console.ReadKey();
+                mainMenu();
             }
-        }
 
+
+
+        }
+        //yes no options for deposit
         private void depositYesNo()
         {
             char select = '0';
@@ -556,19 +649,17 @@ namespace BankConsoleApp
                 }
             } while (deposit == true);
         }
-
+        //searches the list of all accounts
         private Accounts Account(int accountNumber)
         {
-
             foreach (Accounts account in accounts)
             {
-
                 if (account.matchNumbers(accountNumber))
                     return account;
             }
             return null;
         }
-
+        //console view of deposit
         private void depositView()
         {
             Console.WriteLine("╔═══════════════════════════════════════════════╗");
@@ -580,6 +671,7 @@ namespace BankConsoleApp
             Console.WriteLine("║ \tAmount: $\t\t\t\t║");
             Console.WriteLine("╚═══════════════════════════════════════════════╝");
         }
+        //withdraw function. Contains checks for valid inputs, enough money being withdrawn. notifies user upon withdraw function failure
         private void withdraw()
         {
             Console.Clear();
@@ -588,51 +680,61 @@ namespace BankConsoleApp
             string accNumber = Console.ReadLine();
             Console.SetCursorPosition(17, 6);
             string amount = Console.ReadLine();
-
-            if (findAccount(accNumber))
+            try
             {
-                if (Double.TryParse(amount, out double dblAmount))
+                if (findAccount(accNumber))
                 {
-                    try
+                    if (Double.TryParse(amount, out double dblAmount))
                     {
-                        if (Account(Convert.ToInt32(accNumber)).checkBalance(dblAmount))
+                        try
                         {
-                            Account(Convert.ToInt32(accNumber)).Withdraw(dblAmount);
-                            Console.WriteLine();
-                            Console.WriteLine("Amount withdrawn. Would you like to make another withdrawal Y/N?");
-                            withdrawYesNo();
+                            if (Account(Convert.ToInt32(accNumber)).checkBalance(dblAmount))
+                            {
+                                Account(Convert.ToInt32(accNumber)).Withdraw(dblAmount);
+                                Console.WriteLine();
+                                Console.WriteLine("Amount withdrawn. Would you like to make another withdrawal Y/N?");
+                                withdrawYesNo();
+                            }
+                            else
+                            {
+                                Console.WriteLine();
+                                Console.WriteLine("Account does not have enough funds to withdraw.");
+                                Console.WriteLine("Would you like to try again Y/N?");
+                                withdrawYesNo();
+                            }
                         }
-                        else
+                        catch (NullReferenceException)
                         {
                             Console.WriteLine();
-                            Console.WriteLine("Account does not have enough funds to withdraw.");
-                            Console.WriteLine("Would you like to try again Y/N?");
+                            Console.WriteLine("Error. Account was not created through the application. Try again with a valid account? Y/N");
                             withdrawYesNo();
                         }
                     }
-                    catch (NullReferenceException) {
+                    else
+                    {
                         Console.WriteLine();
-                        Console.WriteLine("Error. Account was not created through the application. Try again with a valid account? Y/N");
+                        Console.WriteLine("Error: Please enter a valid number");
+                        Console.WriteLine("Would you like to try again Y/N?");
                         withdrawYesNo();
                     }
-
                 }
                 else
                 {
-                    Console.WriteLine();
-                    Console.WriteLine("Error: Please enter a valid number");
-                    Console.WriteLine("Would you like to try again Y/N?");
+                    Console.WriteLine("Error. Account Number not found");
+                    Console.WriteLine("Would you like to try search again? Y/N");
                     withdrawYesNo();
                 }
             }
-            else
+            catch
             {
-                Console.WriteLine("Error. Account Number not found");
-                Console.WriteLine("Would you like to try search again? Y/N");
-                withdrawYesNo();
+                Console.WriteLine("Invalid characters entered.");
+                Console.WriteLine("Returning to Main menu. Press any key to continue");
+                Console.ReadKey();
+                mainMenu();
             }
-        }
 
+        }
+        //console viewfor withdraw
         private void withdrawView()
         {
             Console.WriteLine("╔═══════════════════════════════════════════════╗");
@@ -645,7 +747,7 @@ namespace BankConsoleApp
             Console.WriteLine("╚═══════════════════════════════════════════════╝");
         }
 
-
+        //yes no options for withdraw
         private void withdrawYesNo()
         {
             char select = '0';
@@ -670,7 +772,7 @@ namespace BankConsoleApp
                 }
             } while (withdrawing == true);
         }
-
+        //Prints the last 5 statements of an account. Also offers the ability for a user to send the last 5 accounts to email. 
         private void statement()
         {
             Console.Clear();
@@ -678,20 +780,53 @@ namespace BankConsoleApp
             Console.SetCursorPosition(23, 5);
             string accNumber = Console.ReadLine();
             Console.WriteLine();
-            if (findAccount(accNumber))
+
+            try
             {
-               // Account(Convert.ToInt32(accNumber)).viewAccDetails();
-                Account(Convert.ToInt32(accNumber)).PrintStatement();
-                Console.WriteLine("Email statement? Y/N");
+                if (findAccount(accNumber))
+                {
+                    Account(Convert.ToInt32(accNumber)).PrintStatement();
+                    Console.WriteLine("Email statement? Y/N");
+
+                    char select = '0';
+                    bool retryStatement = true;
+                    select = readInput().KeyChar;
+                    do
+                    {
+                        switch (select)
+                        {
+                            case 'y':
+                                retryStatement = false;
+                                Account(Convert.ToInt32(accNumber)).emailStatement();
+                                Console.WriteLine("Statement Emailed. Would you like to email another statement? Y/N");
+                                yesNoStatement();
+                                break;
+                            case 'n':
+                                retryStatement = false;
+                                Console.WriteLine("Statement not emailed. Press any key to return to main menu");
+                                mainMenu();
+                                break;
+                            default:
+                                retryStatement = true;
+                                select = readInput().KeyChar;
+                                break;
+                        }
+                    } while (retryStatement == true);
+                }
+                else
+                    Console.WriteLine("Error. Please enter a valid account number. Try again? Y/N");
                 yesNoStatement();
-
-
             }
-            else
-                Console.WriteLine("Error. Please enter a valid account number. Try again? Y/N");
-            yesNoStatement();
-        }
+            catch (ArgumentException)
+            {
+                Console.WriteLine("Invalid characters entered.");
+                Console.WriteLine("Returning to Main menu. Press any key to continue");
+                Console.ReadKey();
+                mainMenu();
+            }
 
+        }
+        //yes no options for account statements
         private void yesNoStatement()
         {
             char select = '0';
@@ -716,7 +851,7 @@ namespace BankConsoleApp
                 }
             } while (retryStatement == true);
         }
-
+        //account statement search view
         private void statementView()
         {
             {
@@ -729,7 +864,7 @@ namespace BankConsoleApp
                 Console.WriteLine("╚═══════════════════════════════════════════════╝");
             }
         }
-
+        //Deletes an account. Requires user input to find the account number then deletes the file.
         private void deleteAccount()
         {
             Console.Clear();
@@ -739,55 +874,64 @@ namespace BankConsoleApp
             bool deleteConfirm = true;
             char deleteSelect = '0';
             Console.WriteLine();
-
-            if (findAccount(accNumber))
+            try
             {
-                try
+                if (findAccount(accNumber))
                 {
-                    string FileName = Path.Combine(accNumber) + ".txt";//text file joining with account number
-                    Account(Convert.ToInt32(accNumber)).viewAccDetails();
-                    Console.WriteLine("Are you sure you want to delete this file Y/N?");
-
-                    while (deleteConfirm == true)
+                    try
                     {
-                        deleteSelect = readInput().KeyChar;
-                        switch (deleteSelect)
+                        string FileName = Path.Combine(accNumber) + ".txt";//text file joining with account number
+                        Account(Convert.ToInt32(accNumber)).viewAccDetails();
+                        Console.WriteLine("Are you sure you want to delete this file Y/N?");
+
+                        while (deleteConfirm == true)
                         {
-                            case 'y':
-                                File.Delete(FileName);
-                                Console.WriteLine("Account deleted.");
-                                Console.WriteLine("Would you like to try again Y/N?");
-                                retryDelete();
-                                deleteConfirm = false;
-                                break;
-                            case 'n':
-                                mainMenu();
-                                deleteConfirm = false;
-                                break;
-                            default:
-                                deleteSelect = readInput().KeyChar;
-                                deleteConfirm = true;
-                                break;
+                            deleteSelect = readInput().KeyChar;
+                            switch (deleteSelect)
+                            {
+                                case 'y':
+                                    File.Delete(FileName);
+                                    Console.WriteLine("Account deleted.");
+                                    Console.WriteLine("Would you like to try again Y/N?");
+                                    retryDelete();
+                                    deleteConfirm = false;
+                                    break;
+                                case 'n':
+                                    mainMenu();
+                                    deleteConfirm = false;
+                                    break;
+                                default:
+                                    deleteSelect = readInput().KeyChar;
+                                    deleteConfirm = true;
+                                    break;
+                            }
                         }
                     }
+                    catch (NullReferenceException)
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine("Error. Account was not created through the application. Try again with a valid account? Y/N");
+                        retryDelete();
+                    }
                 }
-                catch (NullReferenceException) {
+                else
+                {
                     Console.WriteLine();
-                    Console.WriteLine("Error. Account was not created through the application. Try again with a valid account? Y/N");
+                    Console.WriteLine("Error. Account Number not found");
+                    Console.WriteLine("Would you like to try search again? Y/N");
                     retryDelete();
                 }
-               
-
             }
-            else
+            catch (ArgumentException)
             {
-                Console.WriteLine();
-                Console.WriteLine("Error. Account Number not found");
-                Console.WriteLine("Would you like to try search again? Y/N");
-                retryDelete();
+                Console.WriteLine("Invalid characters entered.");
+                Console.WriteLine("Returning to Main menu. Press any key to continue");
+                Console.ReadKey();
+                mainMenu();
             }
-        }
 
+        }
+        //yes no optons for delete
         private void retryDelete()
         {
             bool delete = true;
@@ -812,10 +956,9 @@ namespace BankConsoleApp
                         retryDelete = readInput().KeyChar;
                         break;
                 }
-
             } while (delete == true);
         }
-
+        //view for delete 
         private void deleteView()
         {
             Console.WriteLine("╔═══════════════════════════════════════════════╗");
