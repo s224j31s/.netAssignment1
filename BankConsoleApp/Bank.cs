@@ -483,7 +483,19 @@ namespace BankConsoleApp
             string accNumber = Console.ReadLine();
             Console.SetCursorPosition(18, 6);
             string amount = Console.ReadLine();
-            string FileName = Path.Combine(accNumber) + ".txt";//text file joining with account number
+
+            try
+            {
+                string FileName = Path.Combine(accNumber) + ".txt";//text file joining with account number
+            }
+            catch(ArgumentException)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Error. Please return to MainMenu by pressing any key");
+                Console.ReadKey();
+                mainMenu();
+            }
+           
 
             if (findAccount(accNumber))
             {
@@ -668,7 +680,7 @@ namespace BankConsoleApp
             Console.WriteLine();
             if (findAccount(accNumber))
             {
-
+               // Account(Convert.ToInt32(accNumber)).viewAccDetails();
                 Account(Convert.ToInt32(accNumber)).PrintStatement();
                 Console.WriteLine("Email statement? Y/N");
                 yesNoStatement();

@@ -1,0 +1,16 @@
+First Name|Tom
+Last Name|Jones
+address|123 da
+Phone Number|1234567890
+email|test@email.com
+Account Number|29281006
+Balance|830
+19.09.2020|Withdraw|500|2100
+
+19.09.2020|Withdraw|500|1600
+19.09.2020|Withdraw|600|1000
+
+19.09.2020|Withdraw|50|950
+19.09.2020|Withdraw|90|860
+19.09.2020|Withdraw|30|830
+

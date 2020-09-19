@@ -31,7 +31,7 @@ namespace BankConsoleApp
 
         public string statementString()
         {
-            return string.Format($"{date.ToString("dd/MM/yyyy")}|" +
+            return string.Format($"{date.ToString("dd.MM.yyyy")}|" +
                                 $"{type}|{debitCredit}|{balance}");
         }
     }

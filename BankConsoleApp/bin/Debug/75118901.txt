@@ -1,0 +1,7 @@
+First Name|Jack
+First Name|Smith
+address|123 Harris St
+Phone Number|1234567890
+First Name|test@email.com
+Account Number| 75118901
+Balance|14050
