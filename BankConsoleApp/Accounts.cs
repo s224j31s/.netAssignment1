@@ -18,7 +18,7 @@ namespace BankConsoleApp
         private string email;
         private List<Transactions> bankStatement;
         private List<string> oldStatements;
-        private List<string> newStatements;
+        private List<string> noDupes;
 
         public Accounts(string firstName, string lastName, string address, string phoneNo, string email, int accNumber, double balance)
         {
@@ -30,7 +30,7 @@ namespace BankConsoleApp
             this.balance = balance;
             this.email = email;
             bankStatement = new List<Transactions>();
-            newStatements = new List<string>();
+            noDupes = new List<string>();
             oldStatements = new List<string>();
 
         }
@@ -41,7 +41,8 @@ namespace BankConsoleApp
         {
             balance += amount;
             depositStatement(amount);
-
+            //List<string> newList = new List<string>(oldStatements);
+            //oldStatements.Clear();
             string FileName = Path.Combine(accNumber.ToString()) + ".txt";//text file joining with account number
 
             //File.WriteAllText(string.Format($"{accNumber}.txt"),
@@ -53,16 +54,33 @@ namespace BankConsoleApp
             foreach (Transactions transaction in bankStatement)
             {
                 statementLists += transaction.fileString();
-              
+
             }
 
             foreach (string line in oldStatements)
             {
                 existingStatements += line + "\n";
             }
-            existingStatements += statementLists;
+          existingStatements += statementLists;
+
+            string fname = ("First Name|" + firstName);
+            string lname = ("First Name|" + lastName);
+            string addr = ("address|" + address);
+            string phoneNumber = ("Phone Number|" + phoneNo.ToString());
+            string accEmail = ("First Name|" + email.ToString());
+            string accountNumber = ("Account Number|" + accNumber.ToString());
+            string accBalance = ("Balance|" + balance.ToString());
+
+
+           // List<string> fileContent = new List<string> { fname, lname, addr, phoneNumber, accEmail, accountNumber,accBalance};
+            //fileContent.AddRange(oldStatements);
+
+           //oldStatements.Add(statementLists);
             using (StreamWriter accDetails = new StreamWriter(FileName))//update account balance
             {
+                // foreach (string s in fileContent) {
+                //  accDetails.WriteLine(s);
+                //}
                 accDetails.WriteLine("First Name|" + firstName);
                 accDetails.WriteLine("Last Name|" + lastName);
                 accDetails.WriteLine("address|" + address);
@@ -70,12 +88,17 @@ namespace BankConsoleApp
                 accDetails.WriteLine("email|" + email);
                 accDetails.WriteLine("Account Number|" + accNumber);
                 accDetails.WriteLine("Balance|" + balance);
-                foreach (string line in oldStatements)
-                {
-                    accDetails.WriteLine(line);
-                }
-                //accDetails.WriteLine(existingStatements);
-                accDetails.WriteLine(statementLists);
+                accDetails.WriteLine(existingStatements.Trim());
+               // accDetails.WriteLine((statementLists).Trim());
+                //foreach (string line in noDupes)
+                // {
+                //  accDetails.WriteLine((line).Trim());
+                //}
+                //foreach(string s in oldStatements)
+                // accDetails.WriteLine((s).Trim());
+                // 
+
+
             }
 
         }
@@ -97,17 +120,27 @@ namespace BankConsoleApp
                 string statementLists = "";
                 string existingStatements = "";
 
+                string fname = ("First Name|" + firstName);
+                string lname = ("First Name|" + lastName);
+                string addr = ("address|" + address);
+                string phoneNumber = ("Phone Number|" + phoneNo.ToString());
+                string accEmail = ("First Name|" + email.ToString());
+                string accountNumber = ("Account Number| " + accNumber.ToString());
+                string accBalance = ("Balance|" + balance.ToString());
+
                 foreach (Transactions transaction in bankStatement)
                 {
                     statementLists += transaction.fileString();
-  
                 }
 
                 foreach (string line in oldStatements)
                 {
                     existingStatements += line + "\n";
                 }
-                existingStatements += statementLists;
+
+                //noDupes = oldStatements.Distinct().ToList();
+                 existingStatements += statementLists;
+                // oldStatements.Add(statementLists);
                 using (StreamWriter accDetails = new StreamWriter(FileName))//update account balance
                 {
                     accDetails.WriteLine("First Name|" + firstName);
@@ -117,12 +150,12 @@ namespace BankConsoleApp
                     accDetails.WriteLine("email|" + email);
                     accDetails.WriteLine("Account Number|" + accNumber);
                     accDetails.WriteLine("Balance|" + balance);
-                    foreach (string line in oldStatements)
-                    {
-                        accDetails.WriteLine(line);
-                    }
-                    //accDetails.WriteLine(existingStatements);
-                    accDetails.WriteLine(statementLists);
+                  //   foreach (string line in noDupes)
+                    //{
+                      //accDetails.WriteLine((line).Trim());
+                    //}
+                    accDetails.WriteLine((existingStatements).Trim());
+                   // accDetails.WriteLine(statementLists);
 
                 }
             }
@@ -138,11 +171,12 @@ namespace BankConsoleApp
             string FileName = Path.Combine(accNumber.ToString()) + ".txt";
             string[] accountFile = File.ReadAllLines(FileName);
             string[] existingStatements = accountFile.Skip(7).ToArray();
-            
+
             foreach (string transaction in existingStatements)
             {
                 ///char[] delimiter = { '|' };
                 //string[] txnInfo = transaction.Split(delimiter, StringSplitOptions.RemoveEmptyEntries);
+              //  oldStatements.Clear();
                 oldStatements.Add(transaction);
                 // bankStatement.Add(new Transactions(Convert.ToDateTime(txnInfo[0]), txnInfo[1], Convert.ToDouble(txnInfo[2]),
                 //        Convert.ToDouble(txnInfo[3])));
@@ -180,32 +214,62 @@ namespace BankConsoleApp
             Console.WriteLine();
         }
 
+  
+
         public void PrintStatement()
         {
-            Console.WriteLine(" Date".PadRight(29, ' ') + "Description".PadRight(24, ' ') + "Debit".PadRight(16, ' ') +
-                              "Credit".PadRight(16, ' ') + "Balance".PadRight(16, ' '));
-            Console.WriteLine(" ".PadRight(100, '-'));
+            
             List<string> infoList = new List<string>();
             foreach (string line in oldStatements)
             {
-                //Console.WriteLine(" " + line);
                 infoList.Add(line);
-
             }
-            foreach (Transactions transaction in bankStatement) {
-                //Console.WriteLine(" " + transaction.fileString());
-                infoList.Add(transaction.fileString());
+            foreach (Transactions transaction in bankStatement)
+            {
+                infoList.Add(transaction.statementString());
             }
 
             infoList.Reverse();
             string[] lastStatements = infoList.Take(5).ToArray();
             List<string> fiveStatements = new List<string>();
             fiveStatements.AddRange(lastStatements);
-            foreach (string statement in fiveStatements) {
-                
-                Console.WriteLine(" " + statement);
+            Console.WriteLine();
+            Console.WriteLine(" ╔═══════════════════════════════════════════════════════════════════════╗");
+            Console.WriteLine(" ║                                                                       ║");
+            Console.WriteLine(" ║                 ACCOUNT DETAILS                                       ║");
+            Console.WriteLine(" ║═══════════════════════════════════════════════════════════════════════║");
+            Console.WriteLine(" ║                                                                       ║");
+            Console.WriteLine($" ║    Account Number: {accNumber}".PadRight(73, ' ') + "║");
+            Console.WriteLine($" ║    Account Balance: ${balance:0.00}".PadRight(73, ' ') + "║");
+            Console.WriteLine($" ║    First Name: {firstName}".PadRight(73, ' ') + "║");
+            Console.WriteLine($" ║    Last Name: {lastName}".PadRight(73, ' ') + "║");
+            Console.WriteLine($" ║    Address: {address}".PadRight(73, ' ') + "║");
+            Console.WriteLine($" ║    Phone: {phoneNo}".PadRight(73, ' ') + "║");
+            Console.WriteLine($" ║    Email: {email}".PadRight(73, ' ') + "║");
+            Console.WriteLine(" ╚═══════════════════════════════════════════════════════════════════════╝");
+            Console.WriteLine(" ║                                                                       ║");
+            Console.WriteLine(" ║               Last Five Statements                                    ║");
+            Console.WriteLine(" ║═══════════════════════════════════════════════════════════════════════║");
+            Console.WriteLine(" ║                                                                       ║");
+
+            try {
+                foreach (string statement in fiveStatements)
+                {
+                    char[] delimiter = { '|' };
+                    string[] txtInfo = statement.Split(delimiter, StringSplitOptions.RemoveEmptyEntries);
+                    string statementString = String.Format("Date: " + txtInfo[0] + " " + txtInfo[1] + " Amount: " + txtInfo[2] + " Current Balance: " + txtInfo[3]);
+
+                    Console.WriteLine($" ║{statementString}".PadRight(73, ' ') + "║");
+                    //Console.WriteLine(" " + statement);
+                }
             }
-                
+            catch(IndexOutOfRangeException) {
+                Console.WriteLine(" ║                                                                       ║");
+                Console.WriteLine(" ║                                                                       ║");
+                Console.WriteLine(" ║ Error. Statements could not be acessed                                ║");
+            }
+            
+            Console.WriteLine(" ╚═══════════════════════════════════════════════════════════════════════╝");
             Console.WriteLine();
         }
 
