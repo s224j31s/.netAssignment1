@@ -1,0 +1,8 @@
+First Name|tom
+Last Name|smith
+address|1234 st dg
+Phone Number|1234567890
+email|test@email.com
+Account Number|66940148
+Balance|500
+19.09.2020|Deposit|500|500

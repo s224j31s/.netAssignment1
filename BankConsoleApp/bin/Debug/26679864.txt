@@ -1,0 +1,29 @@
+First Name|Tom
+Last Name|SMit
+address|1234 jones street
+Phone Number|1234567890
+email|test@mail.com
+Account Number|26679864
+Balance|6789
+19.09.2020|Deposit|500|500
+19.09.2020|Deposit|450|950
+19.09.2020|Deposit|900|1850
+19.09.2020|Withdraw|70|1780
+19.09.2020|Withdraw|30|1750
+19.09.2020|Deposit|123|1873
+19.09.2020|Withdraw|62|1811
+19.09.2020|Deposit|50|1861
+19.09.2020|Deposit|90|1951
+19.09.2020|Deposit|110|2061
+19.09.2020|Deposit|450|2511
+19.09.2020|Deposit|300|2811
+19.09.2020|Withdraw|350|2461
+19.09.2020|Deposit|1500|3961
+19.09.2020|Deposit|500|4461
+19.09.2020|Deposit|300|4761
+19.09.2020|Deposit|900|5661
+19.09.2020|Deposit|450|6111
+19.09.2020|Withdraw|140|5971
+19.09.2020|Deposit|500|6471
+19.09.2020|Deposit|450|6921
+19.09.2020|Withdraw|132|6789
