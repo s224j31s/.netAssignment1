@@ -28,6 +28,8 @@ namespace BankConsoleApp
             this.balance = balance;
             this.email = email;
             bankStatement = new List<Transactions>();
+
+
         }
         //method for depositing money into an account
         public void Deposit(double amount)
@@ -93,8 +95,8 @@ namespace BankConsoleApp
         }
         public void AddOldStatements()
         {
-        
-            string[] accountFile = File.ReadAllLines($"{accNumber}.txt");
+            string FileName = Path.Combine(accNumber.ToString()) + ".txt";
+            string[] accountFile = File.ReadAllLines(FileName);
             string[] oldStatements = accountFile.Skip(7).ToArray();
             foreach (string transaction in oldStatements)
             {
@@ -134,6 +136,17 @@ namespace BankConsoleApp
             Console.WriteLine(" ╚════════════════════════════════════════════════╝");
             Console.WriteLine();
         }
+
+        public void PrintStatement()
+        {
+            Console.WriteLine(" Date".PadRight(29, ' ') + "Description".PadRight(24, ' ') + "Debit".PadRight(16, ' ') +
+                              "Credit".PadRight(16, ' ') + "Balance".PadRight(16, ' '));
+            Console.WriteLine(" ".PadRight(100, '-'));
+            foreach (Transactions transaction in bankStatement)
+                Console.WriteLine(" " + transaction.fileString());
+            Console.WriteLine();
+        }
+
         public string FirstName { get => firstName; set => firstName = value; }
         public string LastName { get => lastName; set => lastName = value; }
         public string Address { get => address; set => address = value; }
