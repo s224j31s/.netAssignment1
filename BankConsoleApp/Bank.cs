@@ -29,7 +29,7 @@ namespace BankConsoleApp
             {
                 if (bank.Login())
                     bank.mainMenu();
-            } while (!bank.loggedIn);
+            } while (!bank.loggedIn); //boolean loop to show login menu if logged in
 
         }
         //Initiate the login process. Checks the login process by username and password. Requires login.txt file or the appliation will prompt
@@ -63,53 +63,62 @@ namespace BankConsoleApp
             } while (key.Key != ConsoleKey.Enter); //loop to faciliate password masking
 
             Console.SetCursorPosition(0, 9);
-
-            if (File.Exists("login.txt"))//login.txt file check
+            try
             {
-                string[] reader = System.IO.File.ReadAllLines("login.txt");
-                try
+                if (File.Exists("login.txt"))//login.txt file check
                 {
-                    foreach (string s in reader)
+                    string[] reader = System.IO.File.ReadAllLines("login.txt");
+                    try
                     {
-                        char[] delimiter = { '|' };
-                        string[] loginCheck = s.Split(delimiter);
-
-                        if (inputUsername == loginCheck[0] && passwordInput == loginCheck[1])
+                        foreach (string s in reader)
                         {
-                            return true;
+                            char[] delimiter = { '|' };
+                            string[] loginCheck = s.Split(delimiter);
+                            //username and password check
+                            if (inputUsername == loginCheck[0] && passwordInput == loginCheck[1])
+                            {
+                                return true;
+                            }
+                        }
+                        if (loginDetails == false)
+                        {
+                            Console.Write("Invalid login details.");
+                            Console.Write(" Please try again (Y/N)");
+                            char retry = '0';
+
+                            while ((retry = readInput().KeyChar) != 'y')
+                                switch (retry)
+                                {
+                                    case 'n':
+                                        Environment.Exit(0);
+                                        break;
+                                    default:
+                                        break;
+                                }
                         }
                     }
-                    if (loginDetails == false)
+                    catch
                     {
-                        Console.Write("Invalid login details.");
-                        Console.Write(" Please try again (Y/N)");
-                        char retry = '0';
-
-                        while ((retry = readInput().KeyChar) != 'y')
-                            switch (retry)
-                            {
-                                case 'n':
-                                    Environment.Exit(0);
-                                    break;
-                                default:
-                                    break;
-                            }
+                        Console.WriteLine("Error. Press any key to exit");
+                        Console.ReadKey();
+                        Environment.Exit(0);
                     }
                 }
-                catch 
-                {
-                    Console.WriteLine("Error. Press any key to exit");
+                else
+                {   //if no login text file was found
+                    Console.WriteLine("Error: login.txt was not able to be found");
+                    Console.WriteLine("Press any key to exit the application");
                     Console.ReadKey();
                     Environment.Exit(0);
                 }
             }
-            else
+            catch
             {
-                Console.WriteLine("Error: login.txt was not able to be found");
-                Console.WriteLine("Press any key to exit the application");
+                Console.WriteLine("There was an error. Please reopen the application.");
                 Console.ReadKey();
                 Environment.Exit(0);
             }
+
             return loggedIn;
         }
         //console view of login
@@ -155,7 +164,7 @@ namespace BankConsoleApp
 
             while (menuBreak == true)
             {
-                if (invalidKey)
+                if (invalidKey) //check for invalid inputs
                 {
                     Console.SetCursorPosition(0, 15);
                     Console.WriteLine("Invalid key. Please enter a number between 1 and 7");
@@ -253,7 +262,6 @@ namespace BankConsoleApp
             Console.SetCursorPosition(11, 7);
             string email = Console.ReadLine();
 
-
             //Email regex pattern source https://www.rhyous.com/2010/06/15/csharp-email-regular-expression/
             string pattern = @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*" + "@" + @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$";
             Regex rgx = new Regex(pattern);
@@ -266,7 +274,7 @@ namespace BankConsoleApp
             else
                 emailMatch = false;
 
-            if (phone.Length == 10 && Int32.TryParse(phone, out int phoneNumber))
+            if (phone.Length == 10 && Int32.TryParse(phone, out int phoneNumber))//checks if phone number i svalid
                 phoneSuccess = true;
             else
                 phoneSuccess = false;
@@ -305,18 +313,19 @@ namespace BankConsoleApp
                 switch (select)
                 {
                     case 'y':
-                        if (phoneSuccess == true && emailMatch == true && noEmpty == true)
+                        if (phoneSuccess == true && emailMatch == true && noEmpty == true)//If all fields are valid
                         {
                             accNumber = new Random().Next(100000, 99999999);//Generates account number randomly
                             balance = 0;
-                            Accounts accounts = new Accounts(firstName, lastName, address, phone, email, accNumber, balance);
-
+                            Accounts accounts = new Accounts(firstName, lastName, address, phone, email, accNumber, balance);//creates an object
+                            //Code to allow for email to be sent
                             SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
                             client.Credentials = new NetworkCredential("dotnetassignmentbank32@gmail.com", "Bankconsoleapp1");
                             client.EnableSsl = true;
                             bool emailSent = true;
                             try
                             {
+                                //Code for email including the sender, receiver and message contents. ALlows for HTML to be in the body of the email
                                 MailMessage message = new MailMessage(new MailAddress("dotnetassignmentbank32@gmail.com", "Simple Bank"),
                                                  new MailAddress("dotnetassignmentbank32@gmail.com", firstName));
                                 message.IsBodyHtml = true;
@@ -335,7 +344,7 @@ namespace BankConsoleApp
 
                               "Kind regards,<br>" +
                               "The Simple Bank Team");
-                                client.Send(message);
+                                client.Send(message); //sends the email message
                                 emailSent = true;
                             }
                             catch
@@ -353,7 +362,7 @@ namespace BankConsoleApp
                             }
 
                             Console.WriteLine("Account number is: " + accNumber);
-
+                            //Process of creating a file and saving the account details to file. Utilises streamwriter
                             string path1 = accNumber.ToString();
                             string FileName = Path.Combine(path1) + ".txt";//text file joining with account number
                             using (StreamWriter accDetails = File.CreateText(FileName))//creating accountnumber.txt
@@ -368,7 +377,7 @@ namespace BankConsoleApp
                             }
                             Console.WriteLine("Do you wish to make another account? Y/N");
                             createAccYesNo();
-                        }
+                        }//below are the potential scenarios for invalid input
                         else if (noEmpty == true && phoneSuccess == false && emailMatch == false || noEmpty == false && phoneSuccess == true && emailMatch == true ||
                              noEmpty == false && phoneSuccess == false && emailMatch == true ||
                               noEmpty == false && phoneSuccess == false && emailMatch == false)
@@ -419,19 +428,16 @@ namespace BankConsoleApp
                     case 'y':
                         createAccount();
                         yesNo = false;
-
                         break;
                     case 'n':
                         mainMenu();
                         yesNo = false;
-
                         break;
                     default:
                         yesNoSelect = readInput().KeyChar;
                         yesNo = true;
                         break;
                 }
-
             }
 
         }
@@ -455,19 +461,19 @@ namespace BankConsoleApp
                 searchAccountView();
                 Console.SetCursorPosition(23, 3);
                 string accNumber = Console.ReadLine();
-                Console.SetCursorPosition(0, 8);
+                Console.SetCursorPosition(0, 6);
                 try
                 {
                     if (findAccount(accNumber))
                     {
                         try
                         {
-                            Account(Convert.ToInt32(accNumber)).viewAccDetails();
+                            Account(Convert.ToInt32(accNumber)).viewAccDetails();//displays the account details
                             Console.WriteLine("Would you like to search for another account Y/N?");
                             searchAccYesNo();
 
                         }
-                        catch (NullReferenceException)
+                        catch (NullReferenceException)//if an account file could not be added to the list of accounts
                         {
                             Console.WriteLine();
                             Console.WriteLine("Error. Account was not created through the application. Try again Y/N");
@@ -487,7 +493,7 @@ namespace BankConsoleApp
 
                     }
                 }
-                catch (ArgumentException)
+                catch (ArgumentException)//catch for invalid inputs
                 {
                     Console.WriteLine();
                     Console.WriteLine("Error. Please return to MainMenu by pressing any key");
@@ -500,7 +506,7 @@ namespace BankConsoleApp
         }
 
         //method to check if the number from user input matches a text file, if it matches the account file contents are added to an account 
-        //object and the method returns true. If the text file cannot be found, return false.
+        //list and the method returns true. If the text file cannot be found, return false.
         private bool findAccount(string accNumber)
         {
             string FileName = Path.Combine(accNumber) + ".txt";
@@ -508,7 +514,7 @@ namespace BankConsoleApp
             {
 
                 string[] accountFile = File.ReadAllLines(FileName);
-                string[] accountInfo = accountFile.Take(7).ToArray();
+                string[] accountInfo = accountFile.Take(7).ToArray(); //takes the first 7 lines of a text file and writes to an array
                 List<string> accInfoList = new List<string>();
                 foreach (string line in accountInfo)
                 {
@@ -518,26 +524,23 @@ namespace BankConsoleApp
                     accInfoList.Add(parsedInfo);
                 }
 
-                try
+                try //tries to add the file to accounts. Returns true if successful, returns false if an error occurs
                 {
                     Accounts validAccount = new Accounts(
                     accInfoList[0], accInfoList[1], accInfoList[2], accInfoList[3], accInfoList[4], Convert.ToInt32(accInfoList[5]), Convert.ToDouble(accInfoList[6]));
                     accounts.Add(validAccount);
-                    validAccount.AddOldStatements();
-
+                    validAccount.AddOldStatements(); //adds the old statements in the text file to the oldstatements list
                 }
                 catch
                 {
                     return false;
                 }
-
                 return true;
             }
             else
             {
                 return false;
             }
-
         }
         //yes no choices for search
         private void searchAccYesNo()
@@ -553,12 +556,10 @@ namespace BankConsoleApp
                     case 'y':
                         searchAccount();
                         searchYesNo = false;
-
                         break;
                     case 'n':
                         mainMenu();
                         searchYesNo = false;
-
                         break;
                     default:
                         select = readInput().KeyChar;
@@ -576,16 +577,15 @@ namespace BankConsoleApp
             string accNumber = Console.ReadLine();
             Console.SetCursorPosition(18, 6);
             string amount = Console.ReadLine();
-
             try
             {
                 if (findAccount(accNumber))
                 {
-                    if (Double.TryParse(amount, out double dblAmount))
+                    if (Double.TryParse(amount, out double dblAmount))//checks if its a valid number entered
                     {
                         try
                         {
-                            Account(Convert.ToInt32(accNumber)).Deposit(dblAmount);
+                            Account(Convert.ToInt32(accNumber)).Deposit(dblAmount);// deposit method invoked
                             Console.WriteLine();
                             Console.WriteLine("Amount deposited. Would you like to make another deposit Y/N?");
                             depositYesNo();
@@ -620,9 +620,6 @@ namespace BankConsoleApp
                 Console.ReadKey();
                 mainMenu();
             }
-
-
-
         }
         //yes no options for deposit
         private void depositYesNo()
@@ -649,7 +646,7 @@ namespace BankConsoleApp
                 }
             } while (deposit == true);
         }
-        //searches the list of all accounts
+        //searches the list of all accounts by looking by account numbers
         private Accounts Account(int accountNumber)
         {
             foreach (Accounts account in accounts)
@@ -684,13 +681,13 @@ namespace BankConsoleApp
             {
                 if (findAccount(accNumber))
                 {
-                    if (Double.TryParse(amount, out double dblAmount))
+                    if (Double.TryParse(amount, out double dblAmount))//checks to see if its a valid number being entered
                     {
                         try
                         {
-                            if (Account(Convert.ToInt32(accNumber)).checkBalance(dblAmount))
+                            if (Account(Convert.ToInt32(accNumber)).checkBalance(dblAmount))//checks to see if an account has enough balance
                             {
-                                Account(Convert.ToInt32(accNumber)).Withdraw(dblAmount);
+                                Account(Convert.ToInt32(accNumber)).Withdraw(dblAmount);//invokes withdraw proess
                                 Console.WriteLine();
                                 Console.WriteLine("Amount withdrawn. Would you like to make another withdrawal Y/N?");
                                 withdrawYesNo();
@@ -720,6 +717,7 @@ namespace BankConsoleApp
                 }
                 else
                 {
+                    Console.WriteLine();
                     Console.WriteLine("Error. Account Number not found");
                     Console.WriteLine("Would you like to try search again? Y/N");
                     withdrawYesNo();
@@ -727,6 +725,7 @@ namespace BankConsoleApp
             }
             catch
             {
+                Console.WriteLine();
                 Console.WriteLine("Invalid characters entered.");
                 Console.WriteLine("Returning to Main menu. Press any key to continue");
                 Console.ReadKey();
@@ -780,14 +779,12 @@ namespace BankConsoleApp
             Console.SetCursorPosition(23, 5);
             string accNumber = Console.ReadLine();
             Console.WriteLine();
-
             try
             {
                 if (findAccount(accNumber))
                 {
-                    Account(Convert.ToInt32(accNumber)).PrintStatement();
+                    Account(Convert.ToInt32(accNumber)).PrintStatement();//prints the account details and up to the last 5 statements
                     Console.WriteLine("Email statement? Y/N");
-
                     char select = '0';
                     bool retryStatement = true;
                     select = readInput().KeyChar;
@@ -797,13 +794,14 @@ namespace BankConsoleApp
                         {
                             case 'y':
                                 retryStatement = false;
-                                Account(Convert.ToInt32(accNumber)).emailStatement();
+                                Account(Convert.ToInt32(accNumber)).emailStatement(); //emails the statement
                                 Console.WriteLine("Statement Emailed. Would you like to email another statement? Y/N");
                                 yesNoStatement();
                                 break;
                             case 'n':
                                 retryStatement = false;
                                 Console.WriteLine("Statement not emailed. Press any key to return to main menu");
+                                Console.ReadKey();
                                 mainMenu();
                                 break;
                             default:
@@ -881,7 +879,7 @@ namespace BankConsoleApp
                     try
                     {
                         string FileName = Path.Combine(accNumber) + ".txt";//text file joining with account number
-                        Account(Convert.ToInt32(accNumber)).viewAccDetails();
+                        Account(Convert.ToInt32(accNumber)).viewAccDetails();//shows the account details
                         Console.WriteLine("Are you sure you want to delete this file Y/N?");
 
                         while (deleteConfirm == true)
@@ -890,7 +888,7 @@ namespace BankConsoleApp
                             switch (deleteSelect)
                             {
                                 case 'y':
-                                    File.Delete(FileName);
+                                    File.Delete(FileName); //deletes the file
                                     Console.WriteLine("Account deleted.");
                                     Console.WriteLine("Would you like to try again Y/N?");
                                     retryDelete();

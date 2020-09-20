@@ -1,0 +1,11 @@
+C:\Users\user 1\Documents\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\bin\Release\100001.txt
+C:\Users\user 1\Documents\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\bin\Release\login.txt
+C:\Users\user 1\Documents\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\bin\Release\BankConsoleApp.exe.config
+C:\Users\user 1\Documents\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\bin\Release\BankConsoleApp.exe
+C:\Users\user 1\Documents\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\bin\Release\BankConsoleApp.pdb
+C:\Users\user 1\Documents\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\obj\Release\BankConsoleApp.csprojAssemblyReference.cache
+C:\Users\user 1\Documents\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\obj\Release\BankConsoleApp.Properties.Resources.resources
+C:\Users\user 1\Documents\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\obj\Release\BankConsoleApp.csproj.GenerateResource.cache
+C:\Users\user 1\Documents\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\obj\Release\BankConsoleApp.csproj.CoreCompileInputs.cache
+C:\Users\user 1\Documents\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\obj\Release\BankConsoleApp.exe
+C:\Users\user 1\Documents\BankConsoleApp-20200914T131840Z-001\BankConsoleApp\obj\Release\BankConsoleApp.pdb
