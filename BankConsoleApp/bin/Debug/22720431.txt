@@ -1,0 +1,7 @@
+First Name|1
+Last Name|1
+address|1
+Phone Number|1
+email|tom@emial.com
+Account Number|22720431
+Balance|0

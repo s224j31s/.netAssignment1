@@ -23,8 +23,9 @@ namespace BankConsoleApp
         private double balance;
         private string email;
         private List<Transactions> bankStatement;
+        //the following 5 lists are used to store transations
         private List<string> oldStatements;
-        private List<string> infoList = new List<string>();
+        private List<string> infoList = new List<string>(); 
         private List<string> fiveStatements = new List<string>();
         private List<string> emailList = new List<string>();
         private List<string> emailStatementfive = new List<string>();
@@ -53,17 +54,17 @@ namespace BankConsoleApp
             string statementLists = "";
             string existingStatements = "";
 
-            foreach (Transactions transaction in bankStatement)
+            foreach (Transactions transaction in bankStatement) //loops through alltransactions and adds to a string
             {
                 statementLists += transaction.fileString();
             }
 
-            foreach (string line in oldStatements)
+            foreach (string line in oldStatements)//loops through all existing transactions and adds to the string
             {
                 existingStatements += line + "\n";
             }
-            existingStatements += statementLists;
-            using (StreamWriter accDetails = new StreamWriter(FileName))//update account balance
+            existingStatements += statementLists; //combines old and new transactions
+            using (StreamWriter accDetails = new StreamWriter(FileName))//update account balance by overriding the file. 
             {
                 accDetails.WriteLine("First Name|" + firstName);
                 accDetails.WriteLine("Last Name|" + lastName);
@@ -72,14 +73,14 @@ namespace BankConsoleApp
                 accDetails.WriteLine("email|" + email);
                 accDetails.WriteLine("Account Number|" + accNumber);
                 accDetails.WriteLine("Balance|" + balance);
-                accDetails.WriteLine(existingStatements.Trim());
+                accDetails.WriteLine(existingStatements.Trim());//trim used to remove trailing white space
             }
 
         }
 
         private void depositStatement(double amount)
         {
-            bankStatement.Add(new Transactions(DateTime.Now, "Deposit", amount, balance));
+            bankStatement.Add(new Transactions(DateTime.Now, "Deposit", amount, balance));// adds to the transaction list
         }
 
         //withdraw money from user account and then updates the file as required
@@ -87,7 +88,7 @@ namespace BankConsoleApp
         {
             string FileName = Path.Combine(accNumber.ToString()) + ".txt";//text file joining with account number
 
-            if (balance >= amount)
+            if (balance >= amount)//checks if balance is greater or equal to amount
             {
                 balance -= amount;
                 withdrawStatement(amount);
@@ -96,15 +97,15 @@ namespace BankConsoleApp
                 foreach (Transactions transaction in bankStatement)
                 {
                     statementLists += transaction.fileString();
-                }
+                }//adds new transactions to the first string
 
                 foreach (string line in oldStatements)
                 {
                     existingStatements += line + "\n";
-                }
-                existingStatements += statementLists;
+                }//adds old transactions to the second string
+                existingStatements += statementLists; //combines the two strings
 
-                using (StreamWriter accDetails = new StreamWriter(FileName))//update account balance
+                using (StreamWriter accDetails = new StreamWriter(FileName))//update account balance by overriding the file
                 {
                     accDetails.WriteLine("First Name|" + firstName);
                     accDetails.WriteLine("Last Name|" + lastName);
@@ -128,15 +129,14 @@ namespace BankConsoleApp
         {
             string FileName = Path.Combine(accNumber.ToString()) + ".txt";
             string[] accountFile = File.ReadAllLines(FileName);
-            string[] existingStatements = accountFile.Skip(7).ToArray();
-
+            string[] existingStatements = accountFile.Skip(7).ToArray();//skips the first 7 lines of the text file and then converts the rest to an array
             foreach (string transaction in existingStatements)
             {
-                oldStatements.Add(transaction);
+                oldStatements.Add(transaction);//adds all old lines into the list of old statements
             }
         }
 
-        
+        //check for account numbers
         public bool matchNumbers(int accountNumber)
         {
             return this.AccNumber == accountNumber;
@@ -183,10 +183,10 @@ namespace BankConsoleApp
             emailList.Reverse();//reverses the list
             string[] lastStatements = emailList.Take(5).ToArray();// takes the first 5 elements of the list and puts into an array
 
-            emailStatementfive.Clear();
+            emailStatementfive.Clear();//clears the list to ensure no old history remains
             emailStatementfive.AddRange(lastStatements);//adds the 5 statements to be sent
             string fiveEmail = "";
-            foreach (string statement in emailStatementfive)
+            foreach (string statement in emailStatementfive)// loops over the five email statements and formats it so it can be emailed
             {
                 char[] delimiter = { '|' };
                 string[] txtInfo = statement.Split(delimiter, StringSplitOptions.RemoveEmptyEntries);
@@ -197,6 +197,7 @@ namespace BankConsoleApp
                 }
             }
          
+            //set up for Smtp client using gmail
             SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
             client.Credentials = new NetworkCredential("dotnetassignmentbank32@gmail.com", "Bankconsoleapp1");
             client.EnableSsl = true;
@@ -204,8 +205,9 @@ namespace BankConsoleApp
             {
                 MailMessage message = new MailMessage(new MailAddress("dotnetassignmentbank32@gmail.com", "Simple Bank"),
                                   new MailAddress("dotnetassignmentbank32@gmail.com", firstName));
-                message.IsBodyHtml = true;
+                message.IsBodyHtml = true;//allows for HTML
 
+                //message contents
                 message.Subject = "Welcome to Simple Bank";
                 message.Body = 
 
@@ -222,44 +224,39 @@ namespace BankConsoleApp
                 "The Simple Banking Team";
                 client.Send(message);
             }
-            catch
+            catch(SmtpException)//if email could not be sent
             {
-                
+                Console.WriteLine("The email could not be sent.Please try again later");
             }
-           
-
+         
         }
         //Code to take the last 5 statements from the account file and then display it to the user
         public void PrintStatement()
         {
             string FileName = Path.Combine(accNumber.ToString()) + ".txt";
             string[] statementFile = File.ReadAllLines(FileName);
-            string[] existingStatements = statementFile.Skip(7).ToArray();
+            string[] existingStatements = statementFile.Skip(7).ToArray();//skips to line 7 of the text file and converts all other lines into a string array
 
-            infoList.Clear();
+            infoList.Clear();//clear lists
             foreach (string line in existingStatements)
             {
                 infoList.Add(line);
             }
-            foreach (Transactions transaction in bankStatement)
-            {
-               // infoList.Add(transaction.statementString());
-            }
 
-            infoList.Reverse();
-            string[] lastStatements = new string[5];
-            if (infoList.Count() <5)
+            infoList.Reverse();//reverse the list
+            string[] lastStatements = new string[5]; 
+            if (infoList.Count() <5)//if there are less than 5 statements add however many to the string array
             {
-              lastStatements = infoList.Take(infoList.Count()).ToArray();
+              lastStatements = infoList.Take(infoList.Count()).ToArray(); 
             }
-            else if(infoList.Count()>= 5)
+            else if(infoList.Count()>= 5)//if there are 5 or more statements add the first 5 to the string array
             {
                 lastStatements = infoList.Take(5).ToArray();
-            }
-            
-         
+            }           
+     
             fiveStatements.Clear();
             fiveStatements.AddRange(lastStatements);
+            //view of the account details + statements
             Console.WriteLine();
             Console.WriteLine(" ╔═══════════════════════════════════════════════════════════════════════╗");
             Console.WriteLine(" ║                                                                       ║");
@@ -279,7 +276,7 @@ namespace BankConsoleApp
             Console.WriteLine(" ║═══════════════════════════════════════════════════════════════════════║");
             Console.WriteLine(" ║                                                                       ║");
 
-            try
+            try//tries to display all the statements. if statements could be not found display an error message
             {
                 foreach (string statement in fiveStatements)
                 {
@@ -295,13 +292,12 @@ namespace BankConsoleApp
             {
                 Console.WriteLine(" ║                                                                       ║");
                 Console.WriteLine(" ║                                                                       ║");
-                Console.WriteLine(" ║ Error. Statements could not be acessed                                ║");
+                Console.WriteLine(" ║ Error. Statements could not be accessed                                ║");
             }
 
             Console.WriteLine(" ╚═══════════════════════════════════════════════════════════════════════╝");
             Console.WriteLine();
         }
-
         public string FirstName { get => firstName; set => firstName = value; }
         public string LastName { get => lastName; set => lastName = value; }
         public string Address { get => address; set => address = value; }
@@ -309,7 +305,6 @@ namespace BankConsoleApp
         public string Email { get => email; set => email = value; }
         public double Balance { get => balance; set => balance = value; }
         public int AccNumber { get => accNumber; set => accNumber = value; }
-
 
     }
 }
